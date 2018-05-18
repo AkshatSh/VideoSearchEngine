@@ -83,3 +83,8 @@ Consists of action videos that can be used to test summaries.
 * [Original YOLO implementation](https://github.com/pjreddie/darknet)
 * [Code for YOLO -> LSTM for image captioning](https://github.com/uvavision/obj2text-neuraltalk2)
 * [YOLO PyTorch Implementation for Guidance](https://github.com/longcw/yolo2-pytorch)
+
+
+### Blogs and Other Websites
+
+* [A Guide for YOLO](https://www.kdnuggets.com/2018/05/implement-yolo-v3-object-detector-pytorch-part-1.html)
