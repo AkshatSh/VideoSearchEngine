@@ -9,6 +9,18 @@ Authors:
 
 Semantically be able to search through a database of videos (using generated summaries)
 
+## System Overview
+
+The system described here is the overview of the overall system archietecture. 
+
+![System Overview](figs/SystemOverview.png)
+
+## Video Summarization Overview
+
+Below is the initial architecture of the video summarization network used to generate video summaries.
+
+![Video Summarization Network](figs/VideoSummarizationNetwork.png)
+
 ## Set Up
 
 To set up the python code create a python3 environment with the following:
