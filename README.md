@@ -81,6 +81,10 @@ Consists of labeled images for image captioning
 
 Consists of action videos that can be used to test summaries.
 
+### [MED Dataset](http://lear.inrialpes.fr/people/potapov/med_summaries)
+
+The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. It contains annotations of 160 videos: a validation set of 60 videos and a test set of 100 videos. There are 10 event categories in the test set.
+
 ## Citations
 
 ### Papers
