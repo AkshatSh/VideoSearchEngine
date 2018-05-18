@@ -26,3 +26,17 @@ For our project, we have come up with a basic goal we plan to reach by the time 
 **Basic Goal:** We will recognize objects through the YOLO algorithm (https://pjreddie.com/darknet/yolo/). Convert each frame to text using the algorithm mentioned in this paper (https://arxiv.org/abs/1707.07102). Come up with basic heuristic for skipping frames so not too much overlap in the summary. Surface all of this through a simple UI to search a video database.
 
 **Stretch Goal:** Investigate other methods for reducing noise in frames (Generative Adversarial Networks), Investigate grouping together semantically similar frames to one common representation to make better summaries.
+
+## Data Sets to Use
+
+### [Common Object Data Set](http://cocodataset.org/#home) 
+
+Consists of labeled images for image captioning
+
+
+### [Sum Me Data Set](https://people.ee.ethz.ch/~gyglim/vsum/)
+
+Consists of action videos that can be used to test summaries.
+
+
+
