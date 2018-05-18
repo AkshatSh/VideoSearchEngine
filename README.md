@@ -38,5 +38,20 @@ Consists of labeled images for image captioning
 
 Consists of action videos that can be used to test summaries.
 
+## Citations
+
+
+### Papers
+
+* [Microsoft Research Paper on Video Summarization](https://arxiv.org/pdf/1704.01466.pdf)
+* [YOLO Paper for bounding box object detection](https://pjreddie.com/media/files/papers/YOLO9000.pdf)
+* [Using YOLO for image captioning](https://arxiv.org/abs/1707.07102)
+
+
+### GitHubs
+
+* [Original YOLO implementation](https://github.com/pjreddie/darknet)
+* [Code for YOLO -> LSTM for image captioning](https://github.com/uvavision/obj2text-neuraltalk2)
+* [YOLO PyTorch Implementation for Guidance](https://github.com/longcw/yolo2-pytorch)
 
 
