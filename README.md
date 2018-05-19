@@ -99,6 +99,7 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [Original YOLO implementation](https://github.com/pjreddie/darknet)
 * [Code for YOLO -> LSTM for image captioning](https://github.com/uvavision/obj2text-neuraltalk2)
 * [YOLO PyTorch Implementation for Guidance](https://github.com/longcw/yolo2-pytorch)
+* [Tiny YOLO Implementation](https://github.com/marvis/pytorch-yolo2)
 * [machinebox -> video analysis/frame partitioning](https://github.com/machinebox/videoanalysis)
 
 ### Blogs and Other Websites
