@@ -8,11 +8,14 @@ matplotlib==2.2.2
 mccabe==0.6.1
 mongoengine==0.15.0
 numpy==1.14.3
+Pillow==5.1.0
 pylint==1.9.1
 pymongo==3.6.1
 pyparsing==2.2.0
 python-dateutil==2.7.3
 pytz==2018.4
 six==1.11.0
+torch==0.4.0
+torchvision==0.2.1
 tqdm==4.23.3
 wrapt==1.10.11
