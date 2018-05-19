@@ -11,7 +11,7 @@ Semantically be able to search through a database of videos (using generated sum
 
 ## System Overview
 
-The system described here is the overview of the overall system archietecture. 
+The system described here is the overview of the overall system archietecture.
 
 ![System Overview](figs/SystemOverview.png)
 
@@ -30,7 +30,7 @@ To set up the python code create a python3 environment with the following:
 # create a virtual environment
 $ python3 -m venv env
 
-# activate environment 
+# activate environment
 $ source env/bin/activate
 
 # install all requirements
@@ -99,7 +99,6 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [Original YOLO implementation](https://github.com/pjreddie/darknet)
 * [Code for YOLO -> LSTM for image captioning](https://github.com/uvavision/obj2text-neuraltalk2)
 * [YOLO PyTorch Implementation for Guidance](https://github.com/longcw/yolo2-pytorch)
-
 
 ### Blogs and Other Websites
 
