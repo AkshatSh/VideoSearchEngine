@@ -35,6 +35,9 @@ $ source env/bin/activate
 
 # install all requirements
 $ pip install -r requirements.txt
+
+# install data files
+$ python dataloader.py
 ```
 
 If you add a new package you will have to update the requirements.txt with the following command:
