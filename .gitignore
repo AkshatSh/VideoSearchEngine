@@ -1,6 +1,9 @@
 # ignore security
 VideoSearchEngine/database_settings.py
 
+# ignore data folder
+data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
