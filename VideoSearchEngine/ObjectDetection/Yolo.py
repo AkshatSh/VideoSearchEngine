@@ -12,7 +12,7 @@ from collections import OrderedDict
 
 from DarknetModels.darknet import DarkNet
 
-class TinyYoloNet(DarkNet):
+class YoloNet(DarkNet):
     def __init__(self):
-        super(TinyYoloNet, self).__init__("cfg/yolov3-tiny.cfg")
-        self.load_weights("data/yolov3-tiny.weights")
+        super(YoloNet, self).__init__("cfg/yolov3.cfg")
+        self.load_weights("data/yolov3.weights")

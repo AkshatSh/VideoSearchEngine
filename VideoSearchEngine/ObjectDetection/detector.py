@@ -5,14 +5,20 @@ import torch.nn as nn
 from torch.autograd import Variable
 import numpy as np
 import cv2 
-from util import *
+from DarknetModels.util import *
 import argparse
 import os 
 import os.path as osp
-from darknet import DarkNet as Darknet
+import DarknetModels.parse_cfg
+from DarknetModels.darknet import DarkNet as Darknet
 import pickle as pkl
 import pandas as pd
 import random
+from TinyYolo import TinyYoloNet
+from Yolo import YoloNet
+
+
+## Test files
 
 def arg_parse():
     """

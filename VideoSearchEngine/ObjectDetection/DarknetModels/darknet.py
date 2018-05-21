@@ -6,12 +6,12 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
 
-from parse_cfg import (
+from .parse_cfg import (
     parse_cfg,
     create_modules
 )
 
-from util import (
+from .util import (
     predict_transform
 )
 
