@@ -82,6 +82,8 @@ Lots of labeled data for text generation of video summaries.
 
 [Paper](https://arxiv.org/pdf/1403.6173.pdf) about how data was collected and performance.
 
+The location of the video dataset: [Source](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/research/human-activity-recognition/mpii-cooking-2-dataset/)
+
 ### [Common Object Data Set](http://cocodataset.org/#home)
 
 Consists of labeled images for image captioning
