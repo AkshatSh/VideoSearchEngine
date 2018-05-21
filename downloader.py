@@ -1,6 +1,7 @@
 import urllib
 import urllib.request
 import os
+import zipfile
 
 def download_file_if_not_exists(url, path):
     if not os.path.exists(path):
@@ -10,6 +11,23 @@ def download_file_if_not_exists(url, path):
         print("downloaded {} from {}".format(path, url))
     else:
         print("Skipping download ... {} already exists".format(path))
+
+def unzip_all_files_in_director(dir_name):
+    # dir_name = "data/"
+    extension = ".zip"
+    for item in os.listdir(dir_name): # loop through items in dir
+        item = os.path.join(dir_name, item)
+        if item.endswith(extension): # check for ".zip" extension
+            print("unzipping {} ...".format(item))
+            file_name = os.path.abspath(item) # get full path of files
+            zip_ref = zipfile.ZipFile(file_name) # create zipfile object
+            zip_ref.extractall(dir_name) # extract file to dir
+            zip_ref.close() # close file
+            os.remove(file_name) # delete zipped file
+            print("finished unzipping {} ...".format(item))
+    
+def download_tacos_dataset():
+    download_file_if_not_exists("http://datasets.d2.mpi-inf.mpg.de/MPII-Cooking-2/TACoS-Multi-Level-1.0.zip", "data/tacos.zip")
 
 def download_yolo_files():
     download_file_if_not_exists("http://pjreddie.com/media/files/yolo.weights", "data/yolo.weights")
@@ -35,6 +53,8 @@ def download_yolo_files():
 
 def main():
     download_yolo_files()
+    download_tacos_dataset()
+    unzip_all_files_in_director("data/")
 
 if __name__ == "__main__":
     main()
