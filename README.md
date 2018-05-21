@@ -96,6 +96,7 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [YOLO Paper for bounding box object detection](https://pjreddie.com/media/files/papers/YOLO9000.pdf)
 * [Using YOLO for image captioning](https://arxiv.org/abs/1707.07102)
 * [Unsupervised Video Summarization with Adversarial Networks](http://web.engr.oregonstate.edu/~sinisa/research/publications/cvpr17_summarization.pdf)
+* [Long-term Recurrent Convolutional Networks](https://arxiv.org/pdf/1411.4389.pdf)
 
 ### GitHubs
 
