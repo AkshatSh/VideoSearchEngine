@@ -26,8 +26,14 @@ def unzip_all_files_in_director(dir_name):
             os.remove(file_name) # delete zipped file
             print("finished unzipping {} ...".format(item))
     
-def download_tacos_dataset():
+def download_tacos_dataset(shouldDownloadLarge=False):
     download_file_if_not_exists("http://datasets.d2.mpi-inf.mpg.de/MPII-Cooking-2/TACoS-Multi-Level-1.0.zip", "data/tacos.zip")
+
+    if shouldDownloadLarge:
+        download_file_if_not_exists(
+            "http://datasets.d2.mpi-inf.mpg.de/MPII-Cooking-2/MPII-Cooking-2-videos.tar.gz", 
+            "data/cooking-videos.tar.gz"
+        )
 
 def download_yolo_files():
     download_file_if_not_exists("http://pjreddie.com/media/files/yolo.weights", "data/yolo.weights")
