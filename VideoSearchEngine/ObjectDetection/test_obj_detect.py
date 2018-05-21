@@ -30,12 +30,12 @@ def main():
     print("loaded weights")
 
 if __name__ == "__main__":
-    # blocks = parse_cfg("cfg/yolov3-tiny.cfg")
-    # print(create_modules(blocks))
+    blocks = parse_cfg("cfg/yolov3-tiny.cfg")
+    print(create_modules(blocks))
     # main()
 
-    model = DarkNet("cfg/yolov3.cfg")
-    model.load_weights("data/yolov3.weights")
-    inp = get_test_input()
-    pred = model(inp, torch.cuda.is_available())
+    # model = DarkNet("cfg/yolov3.cfg")
+    # model.load_weights("data/yolov3.weights")
+    # inp = get_test_input()
+    # pred = model(inp, torch.cuda.is_available())
     print(pred)

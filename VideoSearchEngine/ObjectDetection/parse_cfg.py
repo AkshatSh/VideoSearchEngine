@@ -6,6 +6,16 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
 
+
+class MaxPoolStride1(nn.Module):
+    def __init__(self):
+        super(MaxPoolStride1, self).__init__()
+
+    def forward(self, x):
+        x = F.max_pool2d(F.pad(x, (0,1,0,1), mode='replicate'), 2, stride=1)
+        return x
+
+
 class EmptyLayer(nn.Module):
     def __init__(self):
         super(EmptyLayer, self).__init__()
@@ -91,7 +101,7 @@ def create_modules(blocks):
         # use BiLinear2dUpsampling
         elif (x["type"] == "upsample"):
             stride = int(x["stride"])
-            upsample = nn.Upsample(scale_factor=2, mode="bilinear")
+            upsample = nn.Upsample(scale_factor=2, mode="bilinear", align_corners=True)
             module.add_module("upsample_{}".format(index), upsample)
 
         ## Route Layer
@@ -137,6 +147,18 @@ def create_modules(blocks):
 
             detection = DetectionLayer(anchors)
             module.add_module("Detection_{}".format(index), detection)
+        elif x['type'] == 'maxpool':
+            pool_size = int(x['size'])
+            stride = int(x['stride'])
+            if stride > 1:
+                model = nn.MaxPool2d(pool_size, stride)
+            else:
+                model = MaxPoolStride1()
+            output_filters.append(prev_filters)
+            module.add_module("MaxPool_{}".format(index), model)
+            module_list.append(module)
+            continue
+
         
         module_list.append(module)
         prev_filters = filters

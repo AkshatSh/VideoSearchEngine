@@ -15,6 +15,7 @@ from util import (
     predict_transform
 )
 
+
 class DarkNet(nn.Module):
     def __init__(self, cfgfile):
         super(DarkNet, self).__init__()
@@ -31,8 +32,7 @@ class DarkNet(nn.Module):
         write = 0
         for i, module in enumerate(modules):
             module_type = (module["type"])
-            
-            if module_type == "convolutional" or module_type == "upsample":
+            if module_type == "convolutional" or module_type == "upsample" or module_type == 'maxpool':
                 x = self.module_list[i](x) # apply the layer to the current value
             
             elif module_type == "route":
