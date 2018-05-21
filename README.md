@@ -104,6 +104,7 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [YOLO PyTorch Implementation for Guidance](https://github.com/longcw/yolo2-pytorch)
 * [Tiny YOLO Implementation](https://github.com/marvis/pytorch-yolo2)
 * [machinebox -> video analysis/frame partitioning](https://github.com/machinebox/videoanalysis)
+* [Code to break video into frames](https://gist.github.com/keithweaver/70df4922fec74ea87405b83840b45d57)
 
 ### Blogs and Other Websites
 
