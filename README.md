@@ -109,3 +109,4 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 ### Blogs and Other Websites
 
 * [A Guide for YOLO](https://www.kdnuggets.com/2018/05/implement-yolo-v3-object-detector-pytorch-part-1.html)
+* [Another YOLO Guide (same author as above)](https://blog.paperspace.com/how-to-implement-a-yolo-object-detector-in-pytorch/)
