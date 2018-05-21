@@ -76,6 +76,12 @@ For our project, we have come up with a basic goal we plan to reach by the time 
 
 ## Data Sets to Use
 
+### [TaCos MulitModal Data Set](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/research/vision-and-language/tacos-multi-level-corpus/)
+
+Lots of labeled data for text generation of video summaries.
+
+[Paper](https://arxiv.org/pdf/1403.6173.pdf) about how data was collected and performance.
+
 ### [Common Object Data Set](http://cocodataset.org/#home)
 
 Consists of labeled images for image captioning
@@ -97,6 +103,7 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [Using YOLO for image captioning](https://arxiv.org/abs/1707.07102)
 * [Unsupervised Video Summarization with Adversarial Networks](http://web.engr.oregonstate.edu/~sinisa/research/publications/cvpr17_summarization.pdf)
 * [Long-term Recurrent Convolutional Networks](https://arxiv.org/pdf/1411.4389.pdf)
+* [Coherent Multi-Sentence Video Description with Variable Level of Detail](https://arxiv.org/pdf/1403.6173.pdf)
 
 ### GitHubs
 
