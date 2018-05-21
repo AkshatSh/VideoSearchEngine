@@ -4,6 +4,7 @@ VideoSearchEngine/database_settings.py
 # ignore data folder
 data/
 cfg/
+det/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
