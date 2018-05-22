@@ -35,6 +35,11 @@ will have the optimal number of workers
 
 '''
 
+# determine the number of frames using the length
+# of the video and the frame rate to calculate
+# fps * length(seconds)
+def get_num_frames(length_seconds, frame_rate):
+    return length_seconds * frame_rate
 
 
 def estimate_best_num_workers(frames):
