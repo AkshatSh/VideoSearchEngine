@@ -19,6 +19,8 @@ class EncoderCNN(nn.Module):
 
         # todo update number to work with YOLO detections
         self.linear = nn.Linear(2428, embedded_size)
+
+        # normalize the batch after the embedding
         self.batch_norm = nn.BatchNorm1d(embedded_size, momentum=0.01)
 
         self.init_weights()
@@ -36,3 +38,4 @@ class EncoderCNN(nn.Module):
         x = self.linear(x)
         x = self.bn(x)
         return x
+
