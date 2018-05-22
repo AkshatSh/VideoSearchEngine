@@ -156,3 +156,57 @@ class LayoutEncoder(nn.Module):
         last_hidden = torch.index_select(last_hidde, 0, Variable(reverse_batch_idx, requires_grad=False))
 
         return last_hidden
+
+class DecoderRNN(nn.Module):
+    '''
+    Decode the encoder output and convert it 
+    to a format ready to create the output sequence
+    '''
+    def __init__(self, embed_size, hidden_size, vocab_size, num_layers):
+        super(DecoderRNN, self).__init__()
+
+        # conver the vocab to the embedding
+        self.embedding = nn.Embedding(vocab_size, embed_size)
+
+        # send through the LSTM
+        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
+
+        # convert output to words
+        self.linear = nn.Linear(hidden_size, vocab_size)
+
+        self.init_weights()
+    
+    def init_weights(self):
+        """Initialize weights."""
+        self.embed.weight.data.uniform_(-0.1, 0.1)
+        self.linear.weight.data.uniform_(-0.1, 0.1)
+        self.linear.bias.data.fill_(0)
+    
+    def forward(self, features, captions, lengths):
+        '''
+        Decode Encoder output and produce image captions
+        '''
+        embeddings = self.embedding(captions)
+        embeddings = torch.cat((features.unsqueeze(1), embeddings), 1)
+        packed = pack(embeddings, lengths, batch_first=True)
+        hiddens, _ = self.lstm(packed)
+        outputs = self.linear(hiddens[0])
+        return outputs
+    
+    def sample(self, features, states=None):
+        '''
+        Sample Captions for a given image
+        '''
+        sampled_ids = []
+
+        # add a dimension at the first index to be [_, 1, _, _]
+        inputs = features.unsqueeze(1)
+        for _ in range(20): # 20 is max sample length
+            hiddens, states = self.lstm(inputs, states) # (batch_size, 1, hidden_size)
+            outputs = self.linear(hiddens.squeeze(1))  # (batch_size, vocab_size)
+            predicted = outputs.max(1)[1] # gready search
+            sampled_ids.append(predicted)
+            inputs = self.embedding(predicted)
+        
+        sampled_ids = torch.cat(sampled_ids, 1) # [batch_size, 20]
+        return sampled_ids.unsqueeze()
