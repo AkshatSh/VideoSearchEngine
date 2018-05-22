@@ -13,6 +13,12 @@ from torch.nn.utils.rnn import pad_packed_sequence as unpack
 from torch.autograd import Variable
 
 class EncoderCNN(nn.Module):
+    '''
+    Encoder CNN to extract all the features from an image
+
+    Run Bounding Box Object Detection
+    Pass results onto further encoder and decoder layers
+    '''
     def __init__(self, embedded_size, bbox_model):
         super(EncoderCNN, self).__init__()
         self.bbox_model = bbox_model
