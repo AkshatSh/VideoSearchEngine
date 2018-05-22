@@ -23,19 +23,34 @@ class EncoderCNN(nn.Module):
         # normalize the batch after the embedding
         self.batch_norm = nn.BatchNorm1d(embedded_size, momentum=0.01)
 
+        # intialize the weights with the distribution defined
         self.init_weights()
     
     def init_weights(self):
+        '''
+        Initialize the weights using a normal distribution
+        Intialize bias to be 0
+        '''
         self.linear.weight.data.normal_(0.0, 0.2)
         self.linear.bias.data.fill_(0)
     
     def forward(self, x):
         with torch.no_grad():
+            # the bounding box model has been pretrained
+            # most likely
+            # TODO(akshats): wrap this around a command line flag
             x = self.bbox_model.forward(x)
 
+        # convert results of bounding box detection to a variable
         x = Variable(x.data)
+
+        # reduce to a single row for each batch
         x = x.view(x.size(0), -1)
+
+        # apply a linear layer
         x = self.linear(x)
+
+        # normalize the results
         x = self.bn(x)
         return x
 
