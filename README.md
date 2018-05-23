@@ -2,10 +2,10 @@
 
 Authors:
 
-* [Abby Gray](inserturl.com)
-* [Akshat Shrivastava](Github.com/AkshatSh)
+* [Abby Gray](https://github.com/abbygray)
+* [Akshat Shrivastava](https://github.com/AkshatSh)
 * [Kevin Bi](https://github.com/kevinb22)
-* [Sarah Yu](inserturl.com)
+* [Sarah Yu](https://github.com/sarahyu17)
 
 Semantically be able to search through a database of videos (using generated summaries)
 
