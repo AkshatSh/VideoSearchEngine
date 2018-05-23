@@ -2,10 +2,10 @@
 
 Authors:
 
-* [Abby Gray](inserturl.com)
-* [Akshat Shrivastava](Github.com/AkshatSh)
+* [Abby Gray](https://github.com/abbygray)
+* [Akshat Shrivastava](https://github.com/AkshatSh)
 * [Kevin Bi](https://github.com/kevinb22)
-* [Sarah Yu](inserturl.com)
+* [Sarah Yu](https://github.com/sarahyu17)
 
 Semantically be able to search through a database of videos (using generated summaries)
 
@@ -76,6 +76,14 @@ For our project, we have come up with a basic goal we plan to reach by the time 
 
 ## Data Sets to Use
 
+### [TaCos MulitModal Data Set](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/research/vision-and-language/tacos-multi-level-corpus/)
+
+Lots of labeled data for text generation of video summaries.
+
+[Paper](https://arxiv.org/pdf/1403.6173.pdf) about how data was collected and performance.
+
+The location of the video dataset: [Source](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/research/human-activity-recognition/mpii-cooking-2-dataset/)
+
 ### [Common Object Data Set](http://cocodataset.org/#home)
 
 Consists of labeled images for image captioning
@@ -96,6 +104,8 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [YOLO Paper for bounding box object detection](https://pjreddie.com/media/files/papers/YOLO9000.pdf)
 * [Using YOLO for image captioning](https://arxiv.org/abs/1707.07102)
 * [Unsupervised Video Summarization with Adversarial Networks](http://web.engr.oregonstate.edu/~sinisa/research/publications/cvpr17_summarization.pdf)
+* [Long-term Recurrent Convolutional Networks](https://arxiv.org/pdf/1411.4389.pdf)
+* [Coherent Multi-Sentence Video Description with Variable Level of Detail](https://arxiv.org/pdf/1403.6173.pdf)
 
 ### GitHubs
 
@@ -104,7 +114,9 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [YOLO PyTorch Implementation for Guidance](https://github.com/longcw/yolo2-pytorch)
 * [Tiny YOLO Implementation](https://github.com/marvis/pytorch-yolo2)
 * [machinebox -> video analysis/frame partitioning](https://github.com/machinebox/videoanalysis)
+* [Code to break video into frames](https://gist.github.com/keithweaver/70df4922fec74ea87405b83840b45d57)
 
 ### Blogs and Other Websites
 
 * [A Guide for YOLO](https://www.kdnuggets.com/2018/05/implement-yolo-v3-object-detector-pytorch-part-1.html)
+* [Another YOLO Guide (same author as above)](https://blog.paperspace.com/how-to-implement-a-yolo-object-detector-in-pytorch/)

@@ -16,3 +16,5 @@ VIDEO_DATABASE_URL = "mongodb://{user}:{password}@{location}/{database}".format(
     location=VIDEO_DATABASE_LOCATION,
     database=VIDEO_DATABASE_NAME,
 )
+
+OBJECT_DETECTION_TYPE = "TINY_YOLO"
