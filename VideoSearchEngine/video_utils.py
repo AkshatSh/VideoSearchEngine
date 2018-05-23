@@ -1,13 +1,9 @@
 import cv2
 import numpy as np
 import os
-import argparse
 from tqdm import tqdm
 '''
 This util file is for anything related to video processing that can be factored out into here
-
-Example Usage:
-    python video_utils.py --video_path ../clips/bunny_clip.mp4 --output_path ../frames/bunny_clip/
 '''
 
 def get_frames_from_video(video_path):
@@ -57,13 +53,3 @@ def export_video_frames(frames, output_path):
         # To stop duplicate images
         currentFrame += 1
     print ("Done!")
-
-#TODO: Add arguments to: only extract every nth frame, change width/height of captured frames, etc.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()    
-    parser.add_argument("--video_path", help="path of the video",type=str, required=True)
-    parser.add_argument("--output_path", help="output path of the video frames", type=str)
-    args = parser.parse_args()        
-    res = get_frames_from_video(args.video_path)
-    # Uncomment if frames should be written to directory.
-    #export_video_frames(res, args.output_path)
