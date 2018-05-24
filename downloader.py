@@ -12,6 +12,13 @@ def download_file_if_not_exists(url, path):
     else:
         print("Skipping download ... {} already exists".format(path))
 
+def download_coco():
+    download_file_if_not_exists("http://msvocds.blob.core.windows.net/annotations-1-0-3/captions_train-val2014.zip", "data/captions_train-val2014.zip")
+
+    download_file_if_not_exists("http://msvocds.blob.core.windows.net/coco2014/train2014.zip", "data/train2014.zip")
+
+    download_file_if_not_exists("http://msvocds.blob.core.windows.net/coco2014/val2014.zip", "data/val2014.zip")
+
 def unzip_all_files_in_director(dir_name):
     # dir_name = "data/"
     extension = ".zip"
@@ -60,6 +67,7 @@ def download_yolo_files():
 def main():
     download_yolo_files()
     download_tacos_dataset()
+    download_coco()
     unzip_all_files_in_director("data/")
 
 if __name__ == "__main__":
