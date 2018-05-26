@@ -50,6 +50,12 @@ def get_all_data():
         result.append(entry)
     return result
 
+def get_all_summaries():
+    result = []
+    for entry in collection.find():
+        result.append(entry['summary'])
+    return result
+
 def upload_new_summary(video_name, video_summary, video_url):
     return collection.insert_one(
         {
