@@ -111,7 +111,7 @@ def get_loader(root, coco_annotation, vocab, coco_detection_result, transform, b
     coco = COCODataset(root=root,
                        coco_annotation=coco_annotation,
                        vocab=vocab,
-                       coco_detection_result=coco_detection_result,
+                       detection_result=coco_detection_result,
                        transform=transform)
     
     # Data loader for COCO dataset
