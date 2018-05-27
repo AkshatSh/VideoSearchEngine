@@ -11,7 +11,7 @@ from pycocotools.coco import COCO
 import json
 
 
-class COCODataset(data.dataset):
+class COCODataset(data.Dataset):
     def __init__(self, root, coco_annotation, vocab, detection_result, transform=None):
         self.root = root
         self.coco = COCO(coco_annotation)
