@@ -1,6 +1,7 @@
 import argparse
 import os
 from PIL import Image
+from tqdm import tqdm
 
 
 def resize_image(image, size):
@@ -14,7 +15,7 @@ def resize_images(image_dir, output_dir, size):
 
     images = os.listdir(image_dir)
     num_images = len(images)
-    for i, image in enumerate(images):
+    for i, image in enumerate(tqdm(images)):
         with open(os.path.join(image_dir, image), 'r+b') as f:
             with Image.open(f) as img:
                 img = resize_image(img, size)
