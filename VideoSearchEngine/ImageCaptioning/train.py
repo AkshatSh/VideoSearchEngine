@@ -29,8 +29,8 @@ def main(args):
         torch.cuda.manual_seed(args.seed)
     
     # set up model directory to save the state of the model
-    if not os.path.exists(args.modelpath):
-        os.makedirs(args.modelpath)
+    if not os.path.exists(args.model_path):
+        os.makedirs(args.model_path)
     
         # Image preprocessing
     # For normalization, see https://github.com/pytorch/vision#models
