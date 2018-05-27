@@ -108,7 +108,7 @@ def decode_location(location):
 def get_loader(root, coco_annotation, vocab, coco_detection_result, transform, batch_size, shuffle, num_workers):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
     # COCO caption dataset
-    coco = CocoDataset(root=root,
+    coco = COCODataset(root=root,
                        coco_annotation=coco_annotation,
                        vocab=vocab,
                        coco_detection_result=coco_detection_result,
