@@ -5,7 +5,7 @@ from collections import Counter
 from pycocotools.coco import COCO
 from tqdm import tqdm
 
-class Vocabular(object):
+class Vocabulary(object):
     def __init__(self):
         self.word2idx = {}
         self.idx2word = {}
