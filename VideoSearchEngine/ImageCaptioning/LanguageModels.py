@@ -20,7 +20,7 @@ class EncoderCNN(nn.Module):
     Run some CNN for feature extraction (Paper uses ResNet-152)
     Pass results onto further encoder and decoder layers
     '''
-    def __init__(self, embedded_size, bbox_model):
+    def __init__(self, embedded_size, bbox_model=None):
         super(EncoderCNN, self).__init__()
 
         # set up resnet to extract CNN features
@@ -28,7 +28,7 @@ class EncoderCNN(nn.Module):
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
 
-        self.linear = nn.Linear(resnet.fc.in_features, embed_size)
+        self.linear = nn.Linear(resnet.fc.in_features, embedded_size)
 
         # normalize the batch after the embedding
         self.batch_norm = nn.BatchNorm1d(embedded_size, momentum=0.01)
