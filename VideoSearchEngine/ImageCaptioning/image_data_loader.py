@@ -30,6 +30,7 @@ class COCODataset(data.Dataset):
         caption = coco.anns[ann_id]['caption']
         img_id = coco.anns[ann_id]['image_id']
         path = coco.loadImgs(img_id)[0]['file_name']
+        path = path[1:]
 
         file_path_im = os.path.join(self.root, path)
         if os.path.isfile(file_path_im):
