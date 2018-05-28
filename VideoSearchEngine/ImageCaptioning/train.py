@@ -69,7 +69,7 @@ def main(args):
         list(layout_encoder.parameters()) + 
         list(decoder.parameters()) + 
         list(encoder.linear.parameters()) + 
-        list(encoder.bn.parameters.list)
+        list(encoder.batch_norm.parameters.list)
     )
 
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
