@@ -43,7 +43,7 @@ class COCODataset(data.Dataset):
         if self.transform is not None:
             image = self.transform(image)
         
-        tokens = nltk.tokenize(str(caption).lower())
+        tokens = nltk.word_tokenize(str(caption).lower())
         caption = []
         caption.append(vocab('<start>'))
         caption.extend([vocab(token) for token in tokens])
