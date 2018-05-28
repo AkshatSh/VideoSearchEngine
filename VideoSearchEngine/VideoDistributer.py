@@ -4,7 +4,6 @@ import argparse
 import pickle
 import socket
 import time
-import random
 
 # Main file for taking a video, and separating it into multiple chunks
 # and distributing the work
@@ -28,30 +27,25 @@ async def mock_send_frame(frame_cluster, host, port):
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array so it can be sent over the network.
     '''
-    time.sleep(random.randint(1,4))
-    try:
-        # Pickle the array of frames.
-        filename = "host" + str(host) + "port" + str(port) + "distributerPickleFile.pkl"
-        f = open(filename,'wb')
-        pickle.dump(frame_cluster, f)
-        f.close()
+    # Pickle the array of frames.
+    filename = "host" + str(host) + "port" + str(port) + "distributerPickleFile.pkl"
+    f = open(filename,'wb')
+    pickle.dump(frame_cluster, f)
+    f.close()
 
-        # TODO: Pass in host and port should as parameters, depends on how many machines are avaliable.
-        s = socket.socket()         # Create a socket object
+    # TODO: Pass in host and port should as parameters, depends on how many machines are avaliable.
+    s = socket.socket()         # Create a socket object
 
-        # Send pickle file over the network to server.
-        s.connect((host, port))
-
-        f = open(filename,'rb')
+    # Send pickle file over the network to server.
+    s.connect((host, port))
+    
+    f = open(filename,'rb')
+    data = f.read(1024)
+    while (data):
+        s.send(data)
         data = f.read(1024)
-        while (data):
-            s.send(data)
-            data = f.read(1024)
-        f.close()
-        s.close() 
-    except Exception as e:
-        print(e)
-    time.sleep(random.randint(1,4))
+    f.close()
+    s.close()
 
 #TODO: Look into whether or not a sequential approach is ok or not for this.
 def distribute_frames(frames, hostname, basePort, clusterSize=10):
