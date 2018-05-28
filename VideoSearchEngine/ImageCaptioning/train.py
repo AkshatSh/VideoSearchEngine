@@ -68,7 +68,7 @@ def main(args):
     params =  (
         list(layout_encoder.parameters()) + 
         list(decoder.parameters()) + 
-        list(encoder.linear_parameters()) + 
+        list(encoder.linear.parameters()) + 
         list(encoder.bn.parameters.list)
     )
 
