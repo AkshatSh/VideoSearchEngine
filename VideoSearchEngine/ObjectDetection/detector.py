@@ -178,6 +178,7 @@ for i, batch in enumerate(im_batches):
     else:
         output = torch.cat((output,prediction))
 
+    print(output)
     for im_num, image in enumerate(imlist[i*batch_size: min((i +  1)*batch_size, len(imlist))]):
         im_id = i*batch_size + im_num
         objs = [classes[int(x[-1])] for x in output if int(x[0]) == im_id]

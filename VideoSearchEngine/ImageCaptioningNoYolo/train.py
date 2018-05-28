@@ -9,6 +9,10 @@ from build_vocab import Vocabulary
 from model import EncoderCNN, DecoderRNN
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
+from tqdm import (
+    tqdm,
+    trange
+)
 
 
 # Device configuration
@@ -47,8 +51,8 @@ def main(args):
     
     # Train the models
     total_step = len(data_loader)
-    for epoch in range(args.num_epochs):
-        for i, (images, captions, lengths) in enumerate(data_loader):
+    for epoch in trange(args.num_epochs):
+        for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
             
             # Set mini-batch dataset
             images = images.to(device)
