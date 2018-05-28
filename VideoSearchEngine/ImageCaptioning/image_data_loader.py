@@ -31,7 +31,12 @@ class COCODataset(data.Dataset):
         img_id = coco.anns[ann_id]['image_id']
         path = coco.loadImgs(img_id)[0]['file_name']
 
-        image = Image.open(os.path.join(self.root, path)).convert('RGB')
+        file_path_im = os.path.join(self.root, path)
+        if os.path.isfile(file_path_im):
+            print("is file", file_path_im)
+        else:
+            print("does not exist", file_path_im)
+        image = Image.open(os.path.join(file_path_im)).convert('RGB')
 
         # apply the transform if it exists
         if self.transform is not None:
