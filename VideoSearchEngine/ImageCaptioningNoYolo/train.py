@@ -14,6 +14,9 @@ from tqdm import (
     trange
 )
 
+import sys
+sys.path.append("..")
+
 from ...tensor_board import (
     log_generic_to_tensorboard,
     create_writer
