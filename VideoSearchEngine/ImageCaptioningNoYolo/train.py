@@ -14,9 +14,8 @@ from tqdm import (
     trange
 )
 
-from tensor_board import (
-    create_writer,
-    log_generic_to_tensorboard
+from TensorLogger import (
+    Logger
 )
 
 
@@ -24,7 +23,7 @@ from tensor_board import (
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main(args):
-    tensor_board_writer = create_writer()
+    tensor_board_writer = Logger()
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
@@ -77,9 +76,13 @@ def main(args):
             # Print log info
             if i % args.log_step == 0:
                 step_count = epoch * total_step + i
-                print(step_count)
-                log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss.item())
-                log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "perplexity", np.exp(loss.item()))
+                perplexity_log = np.exp(loss.item())
+                loss_log = loss.item()
+                print(step_count, perplexity_log, loss_log)
+                tensor_board_writer.scalar_summary("loss", loss_log, step_count)
+                tensor_board_writer.scalar_summary("perplexity", perplexity_log, step_count)
+                # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss_log)
+                # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "perplexity",perplexity_log)
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                       .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
                       
