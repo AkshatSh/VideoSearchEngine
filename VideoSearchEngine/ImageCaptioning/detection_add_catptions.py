@@ -1,7 +1,7 @@
 import json
 import os
-os.system('wget http://msvocds.blob.core.windows.net/annotations-1-0-4/image_info_test2014.zip')
-os.system('unzip image_info_test2014.zip')
+#os.system('wget http://msvocds.blob.core.windows.net/annotations-1-0-4/image_info_test2014.zip')
+#os.system('unzip image_info_test2014.zip')
 
 train_val_info = json.load(open('data/coco_raw.json', 'r'))
 
