@@ -76,8 +76,10 @@ def main(args):
 
             # Print log info
             if i % args.log_step == 0:
-                log_generic_to_tensorboard(tensor_board_writer, (epoch * total_step + i), "train", "loss", loss.item())
-                log_generic_to_tensorboard(tensor_board_writer, (epoch * total_step + i), "train", "perplexity", np.exp(loss.item()))
+                step_count = epoch * total_step + i
+                print(step_count)
+                log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss.item())
+                log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "perplexity", np.exp(loss.item()))
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                       .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
                       
