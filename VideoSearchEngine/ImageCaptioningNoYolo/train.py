@@ -75,7 +75,7 @@ def main(args):
 
             # Print log info
             if i % args.log_step == 0:
-                step_count = epoch * total_step + i
+                step_count = epoch * total_step + i + 1
                 perplexity_log = np.exp(loss.item())
                 loss_log = loss.item()
                 print(step_count, perplexity_log, loss_log)
