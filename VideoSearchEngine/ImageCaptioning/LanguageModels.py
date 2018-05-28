@@ -45,7 +45,7 @@ class EncoderCNN(nn.Module):
         self.linear.bias.data.fill_(0)
     
     def forward(self, x):
-        x = self.resent.forward(x)
+        x = self.resnet.forward(x)
 
         # convert results of bounding box detection to a variable
         x = Variable(x.data)
