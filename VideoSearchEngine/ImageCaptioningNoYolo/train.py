@@ -14,11 +14,17 @@ from tqdm import (
     trange
 )
 
+from ...tensor_board import (
+    log_generic_to_tensorboard,
+    create_writer
+)
+
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main(args):
+    tensor_board_writer = create_writer()
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
@@ -70,8 +76,11 @@ def main(args):
 
             # Print log info
             if i % args.log_step == 0:
+                log_generic_to_tensorboard(tensor_board_writer, (epoch * total_step + i), "train", "loss", loss.item())
+                log_generic_to_tensorboard(tensor_board_writer, (epoch * total_step + i), "train", "perplexity", np.exp(loss.item()))
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item()))) 
+                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
+                      
                 
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:
