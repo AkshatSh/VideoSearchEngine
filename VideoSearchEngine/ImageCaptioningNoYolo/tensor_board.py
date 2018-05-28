@@ -1,4 +1,4 @@
-from tensorboard.writer import SummaryWriter
+from tensorboard import SummaryWriter
 
 from constants import (
     LOG_DIR
