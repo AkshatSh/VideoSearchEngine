@@ -28,6 +28,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
     criterion = nn.CrossEntropyLoss()
     loss_total = 0
+    loss_count = 0
     for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
         # Set mini-batch dataset
         images = Variable(images, requires_grad=False).to(device)
@@ -41,9 +42,10 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         decoder.zero_grad()
         encoder.zero_grad()
         loss_total += loss.item()
+        loss_count += 1
         if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-    tensor_board_writer.scalar_summary("dev_loss", loss_total, step_count)
+    tensor_board_writer.scalar_summary("dev_loss", ( ((float) loss_total) / loss_count), step_count)
     
 
 def main(args):
