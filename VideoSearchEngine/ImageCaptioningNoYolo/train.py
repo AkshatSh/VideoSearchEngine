@@ -58,6 +58,9 @@ def main(args):
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
     
+    with open(args.test_vocab_path, 'rb') as f:
+        test_vocab = pickle.load(f)
+    
     # Build data loader
     data_loader = get_loader(args.image_dir, args.caption_path, vocab, 
                              transform, args.batch_size,
@@ -66,7 +69,7 @@ def main(args):
     test_data_loader = get_loader(
         args.test_image_dir, 
         args.test_caption_path, 
-        args.test_vocab, 
+        test_vocab, 
         transform, 
         args.batch_size, 
         shuffle=True, 
