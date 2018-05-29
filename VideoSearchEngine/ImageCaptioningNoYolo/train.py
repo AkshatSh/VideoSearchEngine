@@ -37,6 +37,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         decoder.zero_grad()
         encoder.zero_grad()
         loss_total += loss
+        print(i)
     tensor_board_writer.scalar_summary("dev_loss", loss_total, step_count)
     
 
@@ -87,6 +88,7 @@ def main(args):
     # Train the models
     total_step = len(data_loader)
     for epoch in trange(args.num_epochs):
+        test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
         for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
             
             # Set mini-batch dataset
@@ -124,7 +126,6 @@ def main(args):
                     args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
                 torch.save(encoder.state_dict(), os.path.join(
                     args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
-        test(encoder, decoder, test_data_loader, (epoch + 1) * total_step, tensor_board_writer)
 
 
 if __name__ == '__main__':
