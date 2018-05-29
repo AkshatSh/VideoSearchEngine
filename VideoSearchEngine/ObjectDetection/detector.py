@@ -156,8 +156,17 @@ for i, batch in enumerate(im_batches):
         batch = batch.cuda()
 
     prediction = model(Variable(batch, requires_grad = False), CUDA)
+    print(prediction.shape)
 
     prediction = write_results(prediction, confidence, num_classes, nms_conf = nms_thesh)
+    # result has 
+    # index in batch
+    # 4 box coordinates
+    # object scorness
+    # the score for the class
+    # maximum confidence 
+    # and the index of the class
+    print(prediction.shape)
 
     end = time.time()
 
@@ -170,15 +179,15 @@ for i, batch in enumerate(im_batches):
             print("----------------------------------------------------------")
         continue
 
+    print(prediction.shape)
     prediction[:,0] += i*batch_size    #transform the atribute from index in batch to index in imlist 
-
     if not write:                      #If we have't initialised output
         output = prediction  
         write = 1
     else:
         output = torch.cat((output,prediction))
 
-    print(output)
+    print(output.shape)
     for im_num, image in enumerate(imlist[i*batch_size: min((i +  1)*batch_size, len(imlist))]):
         im_id = i*batch_size + im_num
         objs = [classes[int(x[-1])] for x in output if int(x[0]) == im_id]
