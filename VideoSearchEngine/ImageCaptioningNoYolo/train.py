@@ -22,6 +22,24 @@ from TensorLogger import (
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
+    criterion = nn.CrossEntropyLoss()
+    loss_total = 0
+    for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
+        # Set mini-batch dataset
+        images = images.to(device)
+        captions = captions.to(device)
+        targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
+
+        features = encoder(images)
+        outputs = decoder(features, captions, lengths)
+        loss = criterion(outputs, targets)
+        decoder.zero_grad()
+        encoder.zero_grad()
+        loss_total += loss
+    tensor_board_writer.scalar_summary("dev_loss", loss_total, step_count)
+    
+
 def main(args):
     tensor_board_writer = Logger()
     # Create model directory
@@ -44,6 +62,15 @@ def main(args):
     data_loader = get_loader(args.image_dir, args.caption_path, vocab, 
                              transform, args.batch_size,
                              shuffle=True, num_workers=args.num_workers) 
+    
+    test_data_loader = get_loader(
+        args.test_image_dir, 
+        args.test_caption_path, 
+        args.test_vocab, 
+        transform, 
+        args.batch_size, 
+        shuffle=True, 
+        num_workers=args.num_workers)
 
     # Build the models
     encoder = EncoderCNN(args.embed_size).to(device)
@@ -94,6 +121,7 @@ def main(args):
                     args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
                 torch.save(encoder.state_dict(), os.path.join(
                     args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+        test(encoder, decoder, test_data_loader, (epoch + 1) * total_step)
 
 
 if __name__ == '__main__':
@@ -103,6 +131,9 @@ if __name__ == '__main__':
     parser.add_argument('--vocab_path', type=str, default='data/vocab.pkl', help='path for vocabulary wrapper')
     parser.add_argument('--image_dir', type=str, default='data/resized2014', help='directory for resized images')
     parser.add_argument('--caption_path', type=str, default='data/annotations/captions_train2014.json', help='path for train annotation json file')
+    parser.add_argument('--test_image_dir', type=str, default='data/val_resized2014', help='directory for resized images')
+    parser.add_argument('--test_caption_path', type=str, default='data/annotations/captions_val2014.json', help='path for train annotation json file')
+    parser.add_argument('--test_vocab_path', type=str, default='data/test_vocab.pkl', help='path for vocabulary wrapper')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
     
