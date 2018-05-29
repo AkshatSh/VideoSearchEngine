@@ -38,7 +38,8 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         decoder.zero_grad()
         encoder.zero_grad()
         loss_total += loss
-        torch.cuda.empty()
+        if torch.cuda.is_available():
+                torch.cuda.empty_cache()
     tensor_board_writer.scalar_summary("dev_loss", loss_total, step_count)
     
 
@@ -129,7 +130,8 @@ def main(args):
                 torch.save(encoder.state_dict(), os.path.join(
                     args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
             
-            torch.cuda.empty()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
 
 if __name__ == '__main__':
