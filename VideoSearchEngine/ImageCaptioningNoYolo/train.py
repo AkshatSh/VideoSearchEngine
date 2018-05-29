@@ -40,7 +40,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         loss = criterion(outputs, targets)
         decoder.zero_grad()
         encoder.zero_grad()
-        loss_total += loss
+        loss_total += loss.item()
         if torch.cuda.is_available():
                 torch.cuda.empty_cache()
     tensor_board_writer.scalar_summary("dev_loss", loss_total, step_count)
