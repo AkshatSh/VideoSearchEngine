@@ -28,7 +28,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
     for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
         # Set mini-batch dataset
         images = images.to(device)
-        print(images.shape)
+        # print(images.shape)
         captions = captions.to(device)
         targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
 
@@ -93,6 +93,7 @@ def main(args):
             
             # Set mini-batch dataset
             images = images.to(device)
+            # print(images.shape)
             captions = captions.to(device)
             targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
             
