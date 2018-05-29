@@ -28,6 +28,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
     for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
         # Set mini-batch dataset
         images = images.to(device)
+        print(images.shape)
         captions = captions.to(device)
         targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
 
@@ -37,7 +38,6 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         decoder.zero_grad()
         encoder.zero_grad()
         loss_total += loss
-        print(i)
     tensor_board_writer.scalar_summary("dev_loss", loss_total, step_count)
     
 
