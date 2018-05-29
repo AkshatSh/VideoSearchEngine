@@ -29,7 +29,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
     loss_total = 0
     for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
         # Set mini-batch dataset
-        images = images.to(device)
+        images = Variable(images, requires_grad=False).to(device)
         # print(images.shape)
         captions = captions.to(device)
         targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
