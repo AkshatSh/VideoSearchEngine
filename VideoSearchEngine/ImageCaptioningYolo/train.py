@@ -64,6 +64,7 @@ def main(args, bbox_model):
     
     # Load vocabulary wrapper
     with open(args.vocab_path, 'rb') as f:
+        print(args.vocab_path)
         vocab = pickle.load(f)
     
     with open(args.test_vocab_path, 'rb') as f:
