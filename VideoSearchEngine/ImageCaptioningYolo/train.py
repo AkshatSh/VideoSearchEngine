@@ -92,7 +92,7 @@ def main(args, bbox_model):
         args.embed_size, 
         len(vocab), 
         vocab
-    ).to(devie)
+    ).to(device)
 
     decoder = DecoderLayoutRNN(
         args.embed_size,
