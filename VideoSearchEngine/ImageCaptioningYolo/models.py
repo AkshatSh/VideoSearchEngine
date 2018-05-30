@@ -49,7 +49,9 @@ class YoloEncoder(nn.Module):
     
     def forward(self, image):
         image = image.cpu().data.numpy()
+        print("Starting get bbox models")
         labels, bboxes, lengths = self.bbox_model.get_bbox(image)
+        print("God bboxes")
         labels_one_hot = self.vocab(labels)
         return self.forward_internal(labels_one_hot, bboxes, lengths)
     
@@ -58,6 +60,7 @@ class YoloEncoder(nn.Module):
         # sort the batches so that the longest sequence is the start
         # and the shortest is at the end
         # only sorts the indexes
+        print("starting RNN encoding of bbox models")
         batch_idx_sorted = sorted(
             range(len(lengths)), 
             key=lambda k: lengths[k], 
