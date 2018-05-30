@@ -92,14 +92,14 @@ def main(args, bbox_model):
         args.embed_size, 
         len(vocab), 
         vocab
-    )
+    ).to(devie)
 
     decoder = DecoderLayoutRNN(
         args.embed_size,
         args.hidden_size,
         len(vocab),
         args.num_layers
-    )
+    ).to(device)
     
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
