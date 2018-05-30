@@ -47,15 +47,15 @@ class YoloEncoder(nn.Module):
         self.bbox_encoder.weight.data.uniform_(-0.1, 0.1)
         self.bbox_encoder.bias.data.fill_(0)
     
-    # def forward(self, image):
-    #     image = image.cpu().data.numpy()
-    #     print("Starting get bbox models")
-    #     labels, bboxes, lengths = self.bbox_model.get_bbox(image)
-    #     print("God bboxes")
-    #     labels_one_hot = self.vocab(labels)
-    #     return self.forward_internal(labels_one_hot, bboxes, lengths)
+    def forward(self, image):
+        image = image.cpu().data.numpy()
+        print("Starting get bbox models")
+        labels, bboxes, lengths = self.bbox_model.get_bbox(image)
+        print("Got bboxes")
+        labels_one_hot = self.vocab(labels)
+        return self.forward_internal(labels_one_hot, bboxes, lengths)
     
-    def forward(self, labels, bboxes, lengths):
+    def forward_internal(self, labels, bboxes, lengths):
 
         # sort the batches so that the longest sequence is the start
         # and the shortest is at the end
