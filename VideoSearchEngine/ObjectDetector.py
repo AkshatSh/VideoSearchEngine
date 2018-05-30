@@ -30,3 +30,6 @@ The main operation to use is forward on an image
 
 Take a look at ObjectDetection/detector.py for common use cases
 '''
+
+if __name__ == "__main__":
+    model = TinyYolo.TinyYoloNet()

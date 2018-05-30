@@ -150,10 +150,9 @@ class LayoutEncoder(nn.Module):
         
         # replace the first index with the last_hidden_idx of the hiddens_unpacked
         last_hidden = torch.gather(hiddens_unpacked, 1, Variable(last_hidden_idx, requires_grad=False))
-        last_hidden = torch.index_select(last_hidden, 0, Variable(reverse_batch_idx, requires_grad=False))
 
         # convert back to original batch order
-        last_hidden = torch.index_select(last_hidde, 0, Variable(reverse_batch_idx, requires_grad=False))
+        last_hidden = torch.index_select(last_hidden, 0, Variable(reverse_batch_idx, requires_grad=False))
 
         return last_hidden
 

@@ -1,3 +1,8 @@
+import ObjectDetection.TinyYolo as TinyYolo
+import ImageCaptioningYolo.train as image_train
+import ImageCaptioningYolo.im_args as im_args
+
+
 # Main file for generating text for an image
 
 # Main API is here, more files may be used for the implementation
@@ -13,3 +18,8 @@ def get_image_captioner():
 '''
 Describe API supported here
 '''
+
+
+if __name__ == "__main__":
+    model = TinyYolo.TinyYoloNet()
+    image_train.main(im_args.get_arg_parse(), model)

@@ -22,7 +22,6 @@ class EncoderCNN(nn.Module):
         features = self.bn(self.linear(features))
         return features
 
-
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, max_seq_length=20):
         """Set the hyper-parameters and build the layers."""
