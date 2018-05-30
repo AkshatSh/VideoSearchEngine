@@ -48,6 +48,7 @@ class YoloEncoder(nn.Module):
         self.bbox_encoder.bias.data.fill_(0)
     
     def forward(self, image):
+        image = image.data.numpy()
         labels, bboxes, lengths = self.bbox_model.get_bbox(image)
         labels_one_hot = self.vocab(labels)
         return self.forward_internal(labels_one_hot, bboxes, lengths)
