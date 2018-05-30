@@ -8,6 +8,7 @@ import nltk
 from PIL import Image
 from .build_vocab import Vocabulary
 from pycocotools.coco import COCO
+import cv2
 
 
 class CocoDataset(data.Dataset):
@@ -37,6 +38,7 @@ class CocoDataset(data.Dataset):
         path = coco.loadImgs(img_id)[0]['file_name']
 
         image = Image.open(os.path.join(self.root, path)).convert('RGB')
+        image = np.array(image) 
         if self.transform is not None:
             image = self.transform(image)
 
