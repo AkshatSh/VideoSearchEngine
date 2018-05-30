@@ -48,7 +48,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
     tensor_board_writer.scalar_summary("dev_loss", float(loss_total) / loss_count, step_count)
     
 def main(args, model):
-    tensor_board_writer = Logger()
+    tensor_board_writer =None # Logger()
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
