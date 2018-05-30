@@ -25,9 +25,6 @@ def load_classes(namesfile):
     names = fp.read().split("\n")[:-1]
     return names
 
-def get_model():
-    return TinyYoloNet()
-
 def prep_image(img, inp_dim):
     """
     Prepare image for inputting to the neural network. 

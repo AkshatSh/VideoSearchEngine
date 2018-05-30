@@ -3,6 +3,7 @@ from ObjectDetection import (
     TinyYolo,
     Yolo,
 )
+import cv2
 
 # Main file for the bounding box object detection problem
 
@@ -32,4 +33,9 @@ Take a look at ObjectDetection/detector.py for common use cases
 '''
 
 if __name__ == "__main__":
+    picture_name = "data/pics/dog-cycle-car.png"
+    picture_name = "data/resized2014/COCO_train2014_000000012996.jpg"
+    loaded_ims = [cv2.imread(picture_name)] * 2
     model = TinyYolo.TinyYoloNet()
+    class_names, bboxes, lengths = model.get_bbox(loaded_ims)
+    print(lengths)
