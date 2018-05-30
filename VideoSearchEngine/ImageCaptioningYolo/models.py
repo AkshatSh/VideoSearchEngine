@@ -129,6 +129,7 @@ class YoloEncoder(nn.Module):
 
 class DecoderLayoutRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers):
+        super(DecoderLayoutRNN, self).__init__()
         self.embedding = nn.Embedding(vocab_size, embed_size)
 
         self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
