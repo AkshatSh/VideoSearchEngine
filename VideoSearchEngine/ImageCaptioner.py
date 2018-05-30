@@ -1,6 +1,7 @@
 import ObjectDetection.TinyYolo as TinyYolo
 import ImageCaptioningYolo.train as image_train
 import ImageCaptioningYolo.im_args as im_args
+from ImageCaptioningYolo.build_vocab import Vocabulary
 
 
 # Main file for generating text for an image
