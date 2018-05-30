@@ -115,7 +115,7 @@ def main(args, bbox_model):
     total_step = len(data_loader)
     
     for epoch in trange(args.num_epochs):
-        test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
+        # test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
         for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
             images = images.to(device)
             # print(images.shape)
