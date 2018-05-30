@@ -69,18 +69,18 @@ def main(args, bbox_model):
         test_vocab = pickle.load(f)
     
     # Build data loader
-    data_loader = get_loader(args.image_dir, args.caption_path, vocab, 
+    data_loader = get_loader(args.image_dir, args.caption_path, vocab, # bbox_model, 
                              transform, args.batch_size,
                              shuffle=True, num_workers=args.num_workers) 
     
-    test_data_loader = get_loader(
-        args.test_image_dir, 
-        args.test_caption_path, 
-        test_vocab, 
-        transform, 
-        args.batch_size, 
-        shuffle=True, 
-        num_workers=args.num_workers)
+    # test_data_loader = get_loader(
+    #     args.test_image_dir, 
+    #     args.test_caption_path, 
+    #     test_vocab, 
+    #     transform, 
+    #     args.batch_size, 
+    #     shuffle=True, 
+    #     num_workers=args.num_workers)
 
     # Build the models
     encoder = EncoderCNN(args.embed_size).to(device)
