@@ -64,25 +64,24 @@ def main(args, bbox_model):
     
     # Load vocabulary wrapper
     with open(args.vocab_path, 'rb') as f:
-        print(args.vocab_path)
         vocab = pickle.load(f)
     
-    with open(args.test_vocab_path, 'rb') as f:
-        test_vocab = pickle.load(f)
+    # with open(args.test_vocab_path, 'rb') as f:
+    #     test_vocab = pickle.load(f)
     
     # Build data loader
     data_loader = get_loader(args.image_dir, args.caption_path, vocab, 
                              transform, args.batch_size,
                              shuffle=True, num_workers=args.num_workers) 
     
-    test_data_loader = get_loader(
-        args.test_image_dir, 
-        args.test_caption_path, 
-        test_vocab, 
-        transform, 
-        args.batch_size, 
-        shuffle=True, 
-        num_workers=args.num_workers)
+    # test_data_loader = get_loader(
+    #     args.test_image_dir, 
+    #     args.test_caption_path, 
+    #     test_vocab, 
+    #     transform, 
+    #     args.batch_size, 
+    #     shuffle=True, 
+    #     num_workers=args.num_workers)
 
     # Build the models
     encoder = EncoderCNN(args.embed_size).to(device)
