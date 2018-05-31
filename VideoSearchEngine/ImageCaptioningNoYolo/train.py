@@ -137,7 +137,7 @@ def main(args):
             
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-
+    test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -19,8 +19,9 @@ from .im_args import (
     get_arg_parse
 )
 
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
-
+from .TensorLogger import (
+    Logger
+)
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -48,7 +49,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
     tensor_board_writer.scalar_summary("dev_loss", float(loss_total) / loss_count, step_count)
 
 def main(args, bbox_model):
-    tensor_board_writer = None # Logger()
+    tensor_board_writer = Logger()
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
@@ -73,14 +74,14 @@ def main(args, bbox_model):
                              transform, args.batch_size,
                              shuffle=True, num_workers=args.num_workers) 
     
-    # test_data_loader = get_loader(
-    #     args.test_image_dir, 
-    #     args.test_caption_path, 
-    #     test_vocab, 
-    #     transform, 
-    #     args.batch_size, 
-    #     shuffle=True, 
-    #     num_workers=args.num_workers)
+    test_data_loader = get_loader(
+        args.test_image_dir, 
+        args.test_caption_path, 
+        test_vocab, 
+        transform, 
+        args.batch_size, 
+        shuffle=True, 
+        num_workers=args.num_workers)
 
     # Build the models
     encoder = EncoderCNN(args.embed_size).to(device)
@@ -115,7 +116,7 @@ def main(args, bbox_model):
     total_step = len(data_loader)
     
     for epoch in trange(args.num_epochs):
-        # test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
+        test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
         for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
             images = images.to(device)
             # print(images.shape)
@@ -132,7 +133,30 @@ def main(args, bbox_model):
             encoder.zero_grad()
             loss.backward()
             optimizer.step()
-
+            
+            # Print log info
             if i % args.log_step == 0:
+                if i != 0:
+                    step_count = epoch * total_step + i + 1
+                    perplexity_log = np.exp(loss.item())
+                    loss_log = loss.item()
+                    print(step_count, perplexity_log, loss_log)
+                    tensor_board_writer.scalar_summary("loss", loss_log, step_count)
+                    tensor_board_writer.scalar_summary("perplexity", perplexity_log, step_count)
+                # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss_log)
+                # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "perplexity",perplexity_log)
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                       .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
+                      
+                
+            # Save the model checkpoints
+            if (i+1) % args.save_step == 0:
+                torch.save(decoder.state_dict(), os.path.join(
+                    args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+                torch.save(yolo_encoder.state_dict(), os.path.join(
+                    args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+            
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+    
+    test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
