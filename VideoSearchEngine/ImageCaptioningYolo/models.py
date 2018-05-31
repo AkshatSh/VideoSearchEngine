@@ -134,7 +134,7 @@ class YoloEncoder(nn.Module):
         last_hidden_idx = torch.zeros(hiddens_unpacked.size(0), 1, hiddens_unpacked.size(2)).long()
 
         # iterate over each batch
-        for i in range(len(hiddens_unpacked.size(0))):
+        for i in range(hiddens_unpacked.size(0)):
 
             # set the second index of the matrix to be the length of each batch
             last_hidden_idx[i, 0, :] = sorted_lengths[i] - 1
