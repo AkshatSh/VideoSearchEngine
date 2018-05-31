@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import os
 from tqdm import tqdm
+from skimage.measure import compare_ssim as ssim
+
 '''
 This util file is for anything related to video processing that can be factored out into here
 '''
@@ -53,3 +55,30 @@ def export_video_frames(frames, output_path):
         # To stop duplicate images
         currentFrame += 1
     print ("Done!")
+
+
+def group_semantic_frames(frames):
+    '''
+    Given an array of frames extracted from a video, break these into subarrays of semantically similiar frames.
+    For now use the Structural Similarity Index and once it reaches a certain threshold break off. 
+    '''
+    frame_clusters = []
+    group = []
+    for frame in tqdm(frames):
+        if len(group) == 0:
+            group.append(frame)
+        else:
+            # compute structural similarity index between current image and oldest image in the frame group
+            s = ssim(group[0], frame, multichannel=True)
+            if s < 0.5:
+                frame_clusters.append(list(group))
+                group.clear()
+            # TODO: If we don't append the frame each time we only get the salient images
+            group.append(frame)
+
+    count = 0;
+    for cluster in frame_clusters:
+       filename = "frames/bunny_clip/frame_cluster" + str(count) + "/"
+       export_video_frames(cluster, filename)
+       count = count+1
+    #return frame_clusters
