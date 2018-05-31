@@ -64,12 +64,13 @@ class YoloEncoder(nn.Module):
 
         # sort the bboxes
         bboxes_target = torch.zeros(len(bboxes), max(lengths), 4)
+        print(bboxes_target.shape)
         for i, bbox_seq in enumerate(bboxes):
             for j in range(len(bbox_seq)):
+                print(bbox_seq)
                 bboxes_target[i, j, :] = bbox_seq[j]
 
         lengths = torch.Tensor(lengths)
-        print(bboxes_target.shape)
         return self.forward_internal(labels_target, bboxes_target, lengths)
     
     def forward_internal(self, labels, bboxes, lengths):
