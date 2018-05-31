@@ -123,9 +123,9 @@ def main(args, bbox_model):
             targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
             
             # Forward, backward and optimize
-            features = encoder(images)
+            # features = encoder(images)
             yolo_features = yolo_encoder(images)
-            combined_features = yolo_features + features
+            combined_features = yolo_features # + features
             outputs = decoder(combined_features, captions, lengths)
             loss = criterion(outputs, targets)
 
