@@ -24,5 +24,9 @@ def get_arg_parse():
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--learning_rate', type=float, default=0.001)
+
+
+    parser.add_argument('--encoder_path', type=str, default='saved/image_yolo/encoder-5-3000.ckpt')
+    parser.add_argument('--decoder_path', type=str, default='saved/image_yolo/decoder-5-3000.ckpt')
     args = parser.parse_args()
     return args
