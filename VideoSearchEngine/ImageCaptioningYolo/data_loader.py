@@ -79,7 +79,7 @@ def collate_fn(data):
 
     # Merge images (from tuple of 3D tensor to 4D tensor).
     images = torch.stack(images, 0)
-    print(images.shape)
+    # print(images.shape)
 
     # Merge captions (from tuple of 1D tensor to 2D tensor).
     lengths = [len(cap) for cap in captions]

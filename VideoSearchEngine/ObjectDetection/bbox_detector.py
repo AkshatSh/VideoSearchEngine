@@ -31,11 +31,11 @@ def prep_image(img, inp_dim):
     
     Returns a Variable 
     """
-    print("prepping images")
+    # print("prepping images")
     img = cv2.resize(img, (inp_dim, inp_dim))
     img = img[:,:,::-1].transpose((2,0,1)).copy()
     img = torch.from_numpy(img).float().div(255.0).unsqueeze(0)
-    print("prepped images")
+    # print("prepped images")
     return img
 
 classes = load_classes("data/coco.names")
@@ -50,7 +50,7 @@ def get_bbox(model, images):
     #Set the model in evaluation mode
     model.eval()
 
-    print("creating py torch variables")
+    # print("creating py torch variables")
     #PyTorch Variables for images
     im_batches = list(map(prep_image, images, [inp_dim for x in range(len(images))]))
 
@@ -58,7 +58,7 @@ def get_bbox(model, images):
     im_dim_list = [(x.shape[1], x.shape[0]) for x in images]
     im_dim_list = torch.FloatTensor(im_dim_list).repeat(1,2)
 
-    print("creating im dim list")
+    # print("creating im dim list")
 
     if CUDA:
         im_dim_list = im_dim_list.cuda()
@@ -71,7 +71,7 @@ def get_bbox(model, images):
         num_batches = len(images) // batch_size + leftover            
         im_batches = [torch.cat((im_batches[i*batch_size : min((i +  1)*batch_size,
                             len(im_batches))]))  for i in range(num_batches)]
-    print("creating prediction shit")
+    # print("creating prediction shit")
 
     bboxes = []
     classes_detected = []

@@ -59,12 +59,12 @@ class YoloEncoder(nn.Module):
             seq_end = lengths[i]
             labels_target[i, :seq_end] = label_one_hot[:seq_end]
         
-        print(labels_target.shape)
+        # print(labels_target.shape)
 
 
         # sort the bboxes
         bboxes_target = torch.zeros(len(bboxes), max(lengths), 4)
-        print(bboxes_target.shape)
+        # print(bboxes_target.shape)
         for i, bbox_seq in enumerate(bboxes):
             for j in range(len(bbox_seq)):
                 bboxes_target[i, j, :] = bbox_seq[j]
@@ -77,7 +77,7 @@ class YoloEncoder(nn.Module):
         # sort the batches so that the longest sequence is the start
         # and the shortest is at the end
         # only sorts the indexes
-        print("starting RNN encoding of bbox models")
+        # print("starting RNN encoding of bbox models")
         batch_idx_sorted = sorted(
             range(len(lengths)), 
             key=lambda k: lengths[k], 
@@ -89,7 +89,7 @@ class YoloEncoder(nn.Module):
 
         # actually sort the lengths
         sorted_lengths = sorted(lengths, reverse=True)
-        print(sorted_lengths)
+        # print(sorted_lengths)
 
         # lets sort the labels and bboxes as well according to this
         sorted_bboxes = torch.index_select(bboxes, 0, torch.LongTensor(batch_idx_sorted))
