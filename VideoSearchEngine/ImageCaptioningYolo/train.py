@@ -128,5 +128,11 @@ def main(args, bbox_model):
             combined_features = yolo_features # + features
             outputs = decoder(combined_features, captions, lengths)
             loss = criterion(outputs, targets)
+            decoder.zero_grad()
+            encoder.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-            break
+            if i % args.log_step == 0:
+                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
+                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
