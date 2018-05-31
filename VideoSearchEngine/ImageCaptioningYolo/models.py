@@ -167,7 +167,7 @@ class DecoderLayoutRNN(nn.Module):
     
     def forward(self, features, captions, lengths):
         embeddings = self.embedding(captions)
-        embeddings = torch.cat((features.unsqueeze(1), embeddings), 1)
+        embeddings = torch.cat((features, embeddings), 1)
         packed = pack(embeddings, lengths, batch_first=True)
 
         hiddens, _ = self.lstm(packed)
