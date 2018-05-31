@@ -95,7 +95,7 @@ def get_bbox(model, images):
         if type(prediction) != int:
             curr_image_bbox = prediction[:,1:5] # [output[1:5] for output in prediction]
             curr_image_class = prediction[:, -1] # torch.FloatTensor([output[-1] for output in prediction])
-            class_names.append([classes[int(id)] for id in curr_image_class])
+        class_names.append([classes[int(id)] for id in curr_image_class])
         bboxes.append(curr_image_bbox)
         classes_detected.append(curr_image_class)
         lengths.append(len(curr_image_class))
