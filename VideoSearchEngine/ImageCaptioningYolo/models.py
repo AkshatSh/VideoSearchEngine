@@ -80,8 +80,8 @@ class YoloEncoder(nn.Module):
         sorted_lengths = sorted(lengths)
 
         # lets sort the labels and bboxes as well according to this
+        sorted_bboxes = torch.index_select(bboxes, 0, torch.LongTensor(batch_idx_sorted))
         sorted_labels = torch.index_select(labels, 0, torch.LongTensor(batch_idx_sorted))
-        sorted_bboxes = torch.index_select(labels, 0, torch.LongTensor(batch_idx_sorted))
 
         if torch.cuda.is_available():
             sorted_labels = sorted_labels.cuda()
