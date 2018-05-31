@@ -52,7 +52,9 @@ class YoloEncoder(nn.Module):
         print("Starting get bbox models")
         labels, bboxes, lengths = self.bbox_model.get_bbox(image)
         print("Got bboxes")
-        labels_one_hot = self.vocab(labels)
+        labels_one_hot = []
+        labels_one_hot.extend([vocab(token) for token in labels])
+        labels_one_hot = torch.Tensor(labels_one_hot)
         return self.forward_internal(labels_one_hot, bboxes, lengths)
     
     def forward_internal(self, labels, bboxes, lengths):
