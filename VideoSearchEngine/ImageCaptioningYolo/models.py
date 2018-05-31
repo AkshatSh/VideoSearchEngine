@@ -53,7 +53,7 @@ class YoloEncoder(nn.Module):
         labels, bboxes, lengths = self.bbox_model.get_bbox(image)
         print("Got bboxes")
         labels_one_hot = []
-        labels_one_hot.extend([self.vocab(token) for token in labels_n] for labels_n in labels)
+        labels_one_hot.extend(torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels)
         labels_one_hot = torch.Tensor(labels_one_hot)
         return self.forward_internal(labels_one_hot, bboxes, lengths)
     
@@ -70,7 +70,7 @@ class YoloEncoder(nn.Module):
         
         # uses the sorted batches and maps the locatoin of each index to the original position
         # so can be converted back to the normal order
-        reverse_batch_idx = torch.LongTensor([batch_idx.index(i) for i in range(len(batch_idx))])
+        reverse_batch_idx = torch.LongTensor([batch_idx_sorted.index(i) for i in range(len(batch_idx_sorted))])
 
         # actually sort the lengths
         sorted_lengths = sorted(lengths)
