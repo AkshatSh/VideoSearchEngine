@@ -38,7 +38,7 @@ class YoloEncoder(nn.Module):
         # takes the 4 points of the bounding box and encodes it to a custom
         # size
         self.bbox_encoder = nn.Linear(4, bbox_encoding_size)
-        self.lstm = nn.LSTM(bbox_encoding_size, hidden_size, num_layers, batch_first=True)
+        self.lstm = nn.LSTM(bbox_encoding_size, embed_size, num_layers, batch_first=True)
         
         # vocab for encoding
         self.vocab = vocab
