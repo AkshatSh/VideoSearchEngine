@@ -54,7 +54,7 @@ class YoloEncoder(nn.Module):
         labels_one_hot = [torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels]
 
         # sort labels_one_hot and sort bboxes
-        labels_target = torch.zeros(len(labels_one_hot), max(lengths))
+        labels_target = torch.zeros(len(labels_one_hot), max(lengths), dtype=torch.long)
         for i, label_one_hot in enumerate(labels_one_hot):
             seq_end = lengths[i]
             labels_target[i, :seq_end] = label_one_hot[:seq_end]
@@ -102,7 +102,7 @@ class YoloEncoder(nn.Module):
         # create variable representations
         # non trainable because these are inputs
         labels_var = Variable(sorted_labels, requires_grad=False)
-        bboxes_var = Variable(bboxes, requires_grad=False)
+        bboxes_var = Variable(sorted_bboxes, requires_grad=False)
 
         # ENCODINGS
 
