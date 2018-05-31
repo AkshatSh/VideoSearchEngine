@@ -89,6 +89,7 @@ class YoloEncoder(nn.Module):
 
         # actually sort the lengths
         sorted_lengths = sorted(lengths)
+        print(sorted_lengths)
 
         # lets sort the labels and bboxes as well according to this
         sorted_bboxes = torch.index_select(bboxes, 0, torch.LongTensor(batch_idx_sorted))
