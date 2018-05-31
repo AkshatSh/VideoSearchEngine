@@ -43,6 +43,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         if torch.cuda.is_available():
                 torch.cuda.empty_cache()
     tensor_board_writer.scalar_summary("dev_loss", float(loss_total) / loss_count, step_count)
+    tensor_board_writer.scalar_summary("dev_loss", np.exp(float(loss_total) / loss_count), step_count)
     
 
 def main(args):
@@ -92,7 +93,6 @@ def main(args):
     # Train the models
     total_step = len(data_loader)
     for epoch in trange(args.num_epochs):
-        test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
         for i, (images, captions, lengths) in enumerate(tqdm(data_loader)):
             
             # Set mini-batch dataset
@@ -134,7 +134,7 @@ def main(args):
             
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-    test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
+        test(encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

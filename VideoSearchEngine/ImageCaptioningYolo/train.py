@@ -47,6 +47,7 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
         if torch.cuda.is_available():
                 torch.cuda.empty_cache()
     tensor_board_writer.scalar_summary("dev_loss", float(loss_total) / loss_count, step_count)
+    tensor_board_writer.scalar_summary("dev_loss", np.exp(float(loss_total) / loss_count), step_count)
 
 def main(args, bbox_model):
     tensor_board_writer = Logger()
