@@ -67,7 +67,7 @@ class YoloEncoder(nn.Module):
         print(bboxes_target.shape)
         for i, bbox_seq in enumerate(bboxes):
             for j in range(len(bbox_seq)):
-                print(i, j)
+                print(i, j, len(bbox_seq), len(bboxes))
                 print(bbox_seq)
                 bboxes_target[i, j, :] = bbox_seq[j]
 
