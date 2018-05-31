@@ -96,7 +96,7 @@ def get_bbox(model, images):
             curr_image_bbox = prediction[:,1:5] # [output[1:5] for output in prediction]
             curr_image_class = prediction[:, -1] # torch.FloatTensor([output[-1] for output in prediction])
         else:
-            curr_image_bbox = torch.Tensor([0, 0, 0, 0])
+            curr_image_bbox = torch.Tensor([[0, 0, 0, 0]])
             curr_image_class = torch.Tensor([-1])
         class_names.append([classes[int(id)] if id != -1 else "<unk>" for id in curr_image_class])
         bboxes.append(curr_image_bbox)
