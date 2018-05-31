@@ -49,17 +49,26 @@ class YoloEncoder(nn.Module):
     
     def forward(self, image):
         image = image.cpu().data.numpy()
-        print("Starting get bbox models")
         labels, bboxes, lengths = self.bbox_model.get_bbox(image)
-        print(labels)
-        print("Got bboxes")
         labels_one_hot = [torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels]
-        # labels_one_hot.extend(torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels)
-        print(labels_one_hot)
         lengths = torch.Tensor(lengths)
-        print(lengths)
-        # labels_one_hot = torch.Tensor(labels_one_hot)
-        return self.forward_internal(labels_one_hot, bboxes, lengths)
+
+        # sort labels_one_hot and sort bboxes
+        labels_target = torch.zeros(len(labels_one_hot), max(lengths))
+        for i, label_one_hot in enumerate(labels_one_hot):
+            seq_end = lengths[i]
+            labels_target[i, :seq_end] = label_one_hot[:seq_end]
+        
+        print(labels_target.shape)
+
+
+        # sort the bboxes
+        bboxes_target = torch.zeros(len(bboxes), max(lengths), 4)
+        for i, bbox in enumerate(bboxes):
+            seq_end = lengths[i]
+            bboxes_target[i, :seq_end] = bboxes[:seq_end]
+        print(bboxes_target.shape)
+        return self.forward_internal(labels_target, bboxes_target, lengths)
     
     def forward_internal(self, labels, bboxes, lengths):
 
