@@ -20,11 +20,9 @@ def get_frames_from_video(video_path):
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
-
         # Break if no image is returned (have reached end of video)
         if frame is None or ret is False:
             break
-
         # Add frame to array
         frameArray.append(frame)
 
@@ -57,28 +55,24 @@ def export_video_frames(frames, output_path):
     print ("Done!")
 
 
-def group_semantic_frames(frames):
+def group_semantic_frames(frames, threshold=0.35):
     '''
     Given an array of frames extracted from a video, break these into subarrays of semantically similiar frames.
-    For now use the Structural Similarity Index and once it reaches a certain threshold break off. 
+    For now use the Structural Similarity Index and once it reaches a certain threshold break off. Return an array of
+    these sub arrays.
     '''
     frame_clusters = []
     group = []
+    print("Grouping semantic frames")
     for frame in tqdm(frames):
         if len(group) == 0:
             group.append(frame)
         else:
             # compute structural similarity index between current image and oldest image in the frame group
             s = ssim(group[0], frame, multichannel=True)
-            if s < 0.5:
+            if s < threshold:
                 frame_clusters.append(list(group))
                 group.clear()
-            # TODO: If we don't append the frame each time we only get the salient images
+            # TODO: If we don't append the frame each time we only get the salient images which reduces number of frames
             group.append(frame)
-
-    count = 0;
-    for cluster in frame_clusters:
-       filename = "frames/bunny_clip/frame_cluster" + str(count) + "/"
-       export_video_frames(cluster, filename)
-       count = count+1
-    #return frame_clusters
+    return frame_clusters
