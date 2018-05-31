@@ -65,11 +65,8 @@ class YoloEncoder(nn.Module):
         # sort the bboxes
         bboxes_target = torch.zeros(len(bboxes), max(lengths), 4)
         print(bboxes_target.shape)
-        print(bboxes)
         for i, bbox_seq in enumerate(bboxes):
             for j in range(len(bbox_seq)):
-                print(i, j, len(bbox_seq), len(bboxes))
-                print(bbox_seq)
                 bboxes_target[i, j, :] = bbox_seq[j]
 
         lengths = torch.Tensor(lengths)
@@ -134,10 +131,10 @@ class YoloEncoder(nn.Module):
         # Grab the output from the hiddens once unpacked
         hiddens_unpacked = unpack(hiddens, batch_first=True)[0]
 
-        last_hidden_idx = torch.zeros(hiddens.size(0), 1, hiddens_unpacked.size(2)).long()
+        last_hidden_idx = torch.zeros(hiddens_unpacked.size(0), 1, hiddens_unpacked.size(2)).long()
 
         # iterate over each batch
-        for i in range(len(hiddens.size(0))):
+        for i in range(len(hiddens_unpacked.size(0))):
 
             # set the second index of the matrix to be the length of each batch
             last_hidden_idx[i, 0, :] = sorted_lengths[i] - 1
