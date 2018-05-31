@@ -58,7 +58,7 @@ class YoloEncoder(nn.Module):
         print(labels_one_hot)
         lengths = torch.Tensor(lengths)
         print(lengths)
-        labels_one_hot = torch.Tensor(labels_one_hot)
+        # labels_one_hot = torch.Tensor(labels_one_hot)
         return self.forward_internal(labels_one_hot, bboxes, lengths)
     
     def forward_internal(self, labels, bboxes, lengths):
