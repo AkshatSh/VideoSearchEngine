@@ -63,9 +63,9 @@ class YoloEncoder(nn.Module):
 
         # sort the bboxes
         bboxes_target = torch.zeros(len(bboxes), max(lengths), 4)
-        for i, bbox in enumerate(bboxes):
-            seq_end = lengths[i]
-            bboxes_target[i, :seq_end] = bboxes[:seq_end]
+        for i, bbox_seq in enumerate(bboxes):
+            for j in range(len(bbox_seq)):
+                bboxes_target[i, j, :] = bbox_seq[j]
 
         lengths = torch.Tensor(lengths)
         print(bboxes_target.shape)
