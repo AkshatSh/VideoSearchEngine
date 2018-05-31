@@ -54,7 +54,7 @@ async def mock_send_frame(frame_cluster, host, port):
     time.sleep(random.randint(1,4))
 
 #TODO: Look into whether or not a sequential approach is ok or not for this.
-def distribute_frames(frames, hostname, basePort, clusterSize=10):
+def distribute_frames(frame_cluster, hostname, basePort):
     '''
     Given an array of frames break into subarrays and send each subarray
     to some server for processing.
@@ -62,21 +62,10 @@ def distribute_frames(frames, hostname, basePort, clusterSize=10):
     port = basePort
     loop = asyncio.get_event_loop()
     tasks = [] 
-    cluster = []
-    for frame in frames:
-        cluster.append(frame);
-        if len(cluster) % clusterSize == 0:
-            print("Sending cluster")
-            cluster_copy = list(cluster)
-            tasks.append(asyncio.ensure_future(mock_send_frame(cluster_copy, hostname, port)))
-            port = port + 1
-            cluster.clear()   
-    if len(cluster) != 0:
+    for cluster in frame_cluster:
         print("Sending cluster")
-        cluster_copy = list(cluster)
-        tasks.append(asyncio.ensure_future(mock_send_frame(cluster_copy, hostname, port)))
+        tasks.append(asyncio.ensure_future(mock_send_frame(cluster, hostname, port)))
         port = port + 1
-        cluster.clear()
     loop.run_until_complete(asyncio.wait(tasks))  
     loop.close()
 
@@ -87,8 +76,12 @@ Example Usage:
 
 #TODO: Add arguments to: only extract every nth frame, change width/height of captured frames, etc.
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()    
+    parser = argparse.ArgumentParser()
     parser.add_argument("--video_path", help="path of the video",type=str, required=True)
-    args = parser.parse_args()        
-    res = video_utils.get_frames_from_video(args.video_path)
-    distribute_frames(res, "localhost", 24448, 51) # hard code 24448 as the port on the local host, use 51 as the cluster size since we only have two workers on the same local machine
+    args = parser.parse_args()
+    # Get all frames of the video
+    frames = video_utils.get_frames_from_video(args.video_path)
+    # Seperate frames into groups of similiar frames
+    frame_clusters = video_utils.group_semantic_frames(frames)
+    # Distrbute each of the groups
+    distribute_frames(frame_clusters, "localhost", 24448) # hard code 24448 as the port on the local host
