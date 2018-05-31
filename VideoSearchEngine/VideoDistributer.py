@@ -28,7 +28,7 @@ async def mock_send_frame(frame_cluster, host, port):
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array so it can be sent over the network.
     '''
-    time.sleep(random.randint(1,4))
+    time.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
         filename = "host" + str(host) + "port" + str(port) + "distributerPickleFile.pkl"
@@ -51,18 +51,22 @@ async def mock_send_frame(frame_cluster, host, port):
         s.close() 
     except Exception as e:
         print(e)
-    time.sleep(random.randint(1,4))
+    time.sleep(random.randint(1,3))
 
 #TODO: Look into whether or not a sequential approach is ok or not for this.
-def distribute_frames(frame_cluster, hostname, basePort):
+def distribute_frames(frame_cluster, ports_arr):
     '''
     Given an array of frames break into subarrays and send each subarray
     to some server for processing.
     '''
-    port = basePort
     loop = asyncio.get_event_loop()
     tasks = [] 
     for cluster in frame_cluster:
+        # Choose a random avaliable worker to send the cluster to
+        host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
+        hostname = host_and_port[0]
+        port = host_and_port[1]
+        # Send the cluster
         print("Sending cluster")
         tasks.append(asyncio.ensure_future(mock_send_frame(cluster, hostname, port)))
         port = port + 1
@@ -78,10 +82,15 @@ Example Usage:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--video_path", help="path of the video",type=str, required=True)
+    parser.add_argument("--port_list", help="ports avaliable for workers",type=list, required=True)
     args = parser.parse_args()
+    ports= ("".join(args.port_list)[:-1]).split(",") # Produced in ./workerStartup.sh may need to refactor
+
     # Get all frames of the video
     frames = video_utils.get_frames_from_video(args.video_path)
+
     # Seperate frames into groups of similiar frames
     frame_clusters = video_utils.group_semantic_frames(frames)
+
     # Distrbute each of the groups
-    distribute_frames(frame_clusters, "localhost", 24448) # hard code 24448 as the port on the local host
+    distribute_frames(frame_clusters, ports)
