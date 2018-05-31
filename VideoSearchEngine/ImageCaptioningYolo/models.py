@@ -52,8 +52,8 @@ class YoloEncoder(nn.Module):
         print("Starting get bbox models")
         labels, bboxes, lengths = self.bbox_model.get_bbox(image)
         print("Got bboxes")
-        labels_one_hot = []
-        labels_one_hot.extend(torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels)
+        labels_one_hot = [torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels]
+        # labels_one_hot.extend(torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels)
         print(labels_one_hot)
         lengths = torch.Tensor(lengths)
         print(lengths)
