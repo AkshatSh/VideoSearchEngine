@@ -55,7 +55,7 @@ def thread_main(conn):
 
 # host and port are set in workers.conf 
 if __name__ == '__main__':
-    host = sys.argv[1].split(':')[0]
+    host = ''                 # Symbolic name meaning all available interfaces 
     port = int(sys.argv[1].split(':')[1])
     print("Worker started, listening on :" + str(host) + ":" + str(port))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

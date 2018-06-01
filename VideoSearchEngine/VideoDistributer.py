@@ -38,7 +38,7 @@ async def send_frame(frame_cluster, host, port, count):
         f.close()
 
         # TODO: Pass in host and port should as parameters, depends on how many machines are avaliable.
-        s = socket.socket()         # Create a socket object
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         # Create a socket object
 
         # Send pickle file over the network to server.
         print("Sending cluster to " + str(host) + ":" + str(port))
