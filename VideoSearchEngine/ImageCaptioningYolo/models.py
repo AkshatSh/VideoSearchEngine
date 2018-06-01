@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torchvision.models as models
+import torchvision.transforms as Transforms
 from torch.autograd import Variable
 from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn.utils.rnn import pack_padded_sequence as pack
@@ -16,9 +17,11 @@ class EncoderCNN(nn.Module):
         self.resnet = nn.Sequential(*modules)
         self.linear = nn.Linear(resnet.fc.in_features, embed_size)
         self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
+        self.transforms = Transforms.ToTensor()
         
     def forward(self, images):
         """Extract feature vectors from input images."""
+        images = self.transforms(images)
         with torch.no_grad():
             features = self.resnet(images)
         features = features.reshape(features.size(0), -1)
