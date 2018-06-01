@@ -6,6 +6,7 @@ from torch.autograd import Variable
 from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn.utils.rnn import pack_padded_sequence as pack
 from torch.nn.utils.rnn import pad_packed_sequence as unpack
+import numpy as np
 
 
 class EncoderCNN(nn.Module):
@@ -21,7 +22,10 @@ class EncoderCNN(nn.Module):
         
     def forward(self, images):
         """Extract feature vectors from input images."""
-        images = self.transforms(images.cpu().numpy())
+        # images = self.transforms(images.cpu().numpy())
+        npimg = images.cpu().numpy()
+        npimg = np.transpose(npimg,(2,0,1))
+        images = torch.Tensor(npimg)
         if torch.cuda.is_available():
             images = images.cuda()
         with torch.no_grad():
