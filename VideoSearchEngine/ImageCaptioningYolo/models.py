@@ -27,8 +27,6 @@ class EncoderCNN(nn.Module):
         # batch, H, W, C
         # batch, C, H, W
         npimg = np.transpose(npimg,(0,3,1,2))
-
-        print(npimg.shape)
         images = torch.Tensor(npimg)
         if torch.cuda.is_available():
             images = images.cuda()
