@@ -50,7 +50,8 @@ class YoloEncoder(nn.Module):
     
     def forward(self, image):
         image = image.cpu().data.numpy()
-        labels, bboxes, lengths = self.bbox_model.get_bbox(image)
+        with torch.no_grad():
+            labels, bboxes, lengths = self.bbox_model.get_bbox(image)
         labels_one_hot = [torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels]
 
         # sort labels_one_hot and sort bboxes

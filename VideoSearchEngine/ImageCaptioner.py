@@ -25,5 +25,5 @@ Describe API supported here
 if __name__ == "__main__":
     model = TinyYolo.TinyYoloNet()
     args = im_args.get_arg_parse()
-    # image_train.main(im_args.get_arg_parse(), model)
-    image_sample.execute("data/pics/dog-cycle-car.png", model, args)
+    image_train.main(im_args.get_arg_parse(), model)
+    # image_sample.execute("data/pics/dog-cycle-car.png", model, args)
