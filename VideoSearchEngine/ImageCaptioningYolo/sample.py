@@ -4,6 +4,7 @@ import torch
 import pickle
 from .build_vocab import Vocabulary
 from .models import (
+    EncoderCNN,
     YoloEncoder,
     DecoderLayoutRNN
 )
@@ -12,6 +13,8 @@ import numpy as np
 from PIL import Image
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+test_images = load_image("data/pics/dog-cycle-car.png")
+temp = open("temp.txt", 'a')
 
 def load_image(image_path):
     image = Image.open(image_path)
@@ -19,6 +22,27 @@ def load_image(image_path):
     
     image = np.array([np.array(image)])
     return image
+
+
+def test(epoch,vocab, encoder, yolo_encoder, decoder):
+    features = encoder(test_images)
+    yolo_features = yolo_encoder(test_images)
+    combined_features = yolo_features + features
+    sampled_ids = decoder.sample(combined_features)
+    sampled_ids = sampled_ids[0].cpu().numpy()
+
+    sampled_caption = []
+    for word_id in sampled_ids:
+        word = vocab.idx2word[word_id]
+        sampled_caption.append(word)
+        if word == '<end>':
+            break
+    sentence = ' '.join(sampled_caption)
+    temp.write(epoch)
+    temp.write("\n")
+    temp.write(sentence)
+    temp.write("\n")
+    print(sentence)
 
 def get_caption(image, bbox_model, args):
     # Load vocabulary wrapper
@@ -44,7 +68,6 @@ def get_caption(image, bbox_model, args):
     yolo_encoder.load_state_dict(torch.load(args.encoder_path, map_location=lambda storage, loc: storage))
     decoder.load_state_dict(torch.load(args.decoder_path, map_location=lambda storage, loc: storage))
     image_tensor = torch.Tensor(image).to(device)
-    print(image_tensor.shape)
 
     feature = yolo_encoder(image_tensor)
     sampled_ids = decoder.sample(feature)
