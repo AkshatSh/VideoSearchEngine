@@ -3,10 +3,24 @@ import torch.nn as nn
 import torchvision.models as models
 import torchvision.transforms as Transforms
 from torch.autograd import Variable
+import cv2 
 from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn.utils.rnn import pack_padded_sequence as pack
 from torch.nn.utils.rnn import pad_packed_sequence as unpack
 import numpy as np
+
+def prep_image(img, inp_dim):
+    """
+    Prepare image for inputting to the neural network. 
+    
+    Returns a Variable 
+    """
+    # print("prepping images")
+    img = cv2.resize(img, (inp_dim, inp_dim))
+    img = img[:,:,::-1].transpose((2,0,1)).copy()
+    img = torch.from_numpy(img).float().div(255.0).unsqueeze(0)
+    # print("prepped images")
+    return img
 
 
 class EncoderCNN(nn.Module):
@@ -22,12 +36,8 @@ class EncoderCNN(nn.Module):
         
     def forward(self, images):
         """Extract feature vectors from input images."""
-        # images = self.transforms(images.cpu().numpy())
-        npimg = images.cpu().numpy()
-        # batch, H, W, C
-        # batch, C, H, W
-        npimg = np.transpose(npimg,(0,3,1,2))
-        images = torch.Tensor(npimg)
+        images = [prep(image) for image in images]
+        images = torch.Tensor(images)
         if torch.cuda.is_available():
             images = images.cuda()
         with torch.no_grad():
