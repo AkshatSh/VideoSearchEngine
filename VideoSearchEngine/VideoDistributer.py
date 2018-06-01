@@ -23,15 +23,15 @@ def get_video_distributor():
 Describe API supported here
 '''
 
-async def mock_send_frame(frame_cluster, host, port):
+async def send_frame(frame_cluster, host, port, count):
     '''
     Given an array of frames send it to an listening server for further processing. Use pickle
-    to serialize the array so it can be sent over the network.
+    to serialize the array to a file so it can be sent over the network.
     '''
     asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
-        filename = "host" + str(host) + "port" + str(port) + "distributerPickleFile.pkl"
+        filename = "id:" + str(count) + "|" + "host:" + str(host) + "|" + "port:" + str(port) + "|" + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
         f.close()
@@ -62,12 +62,14 @@ def distribute_frames(frame_cluster, ports_arr):
     '''
     loop = asyncio.get_event_loop()
     tasks = [] 
+    count = 0
     for cluster in frame_cluster:
         # Choose a random avaliable worker to send the cluster to
         host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
         hostname = host_and_port[0]
         port = int(host_and_port[1])
-        tasks.append(asyncio.ensure_future(mock_send_frame(cluster, hostname, port)))
+        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, count)))
+        count = count + 1
     loop.run_until_complete(asyncio.wait(tasks))  
     loop.close()
 

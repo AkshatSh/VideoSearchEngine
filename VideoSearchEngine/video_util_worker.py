@@ -14,7 +14,7 @@ count = 0
 def thread_main(conn):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     file_lock.acquire()
-    filename = "host" + host + "port" + str(port) + "workerPickleFile.pkl"
+    filename = "id:" + str(count) + "|" + "host:" + host + "|" + "port:" + str(port) + "|" + "worker.pkl"
     f = open(filename,'wb')
     file_lock.release()
     conn_lock.acquire()
