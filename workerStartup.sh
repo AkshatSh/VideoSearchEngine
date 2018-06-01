@@ -127,7 +127,6 @@ do
 		fi
 	else
 		#mac
-
 		osascript -e "tell app \"Terminal\"
 			do script \"echo -e \\\"\\\\033]0;Worker: $host:$port. Do not close this window when worker is running.\\\\007\\\"; ssh $host \\\"cd ${ROOT}; source env/bin/activate; pip install -r requirements.txt; cd VideoSearchEngine; python video_util_worker.py ${host}:$port \\\"\"
 		end tell"
@@ -153,4 +152,18 @@ fi
 #--------------------------------------------start server--------------------------------------
 echo "Finish starting workers, now starting the server"
 cd "$ROOT"
-#TODO: See if something needs to be done here
+port_list=""
+for worker in $workers
+do 
+	if isMac
+	then
+		host=$(echo $worker | sed -E 's/:[0-9]+$//g') 
+		port=$(echo $worker | sed -E 's/^[^:]+://g') 
+	else
+		host=$(echo $worker | sed 's/:[0-9]\+$//g') 
+		port=$(echo $worker | sed 's/^[^:]\+://g') 
+	fi
+	port_list+=$host:$port
+	port_list+=","
+done
+exec python VideoSearchEngine/VideoDistributer.py --video_path clips/bunny_clip.mp4 --port_list ${port_list}
