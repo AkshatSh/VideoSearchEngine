@@ -28,7 +28,7 @@ async def mock_send_frame(frame_cluster, host, port):
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array so it can be sent over the network.
     '''
-    time.sleep(random.randint(1,3))
+    asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
         filename = "host" + str(host) + "port" + str(port) + "distributerPickleFile.pkl"
@@ -40,8 +40,9 @@ async def mock_send_frame(frame_cluster, host, port):
         s = socket.socket()         # Create a socket object
 
         # Send pickle file over the network to server.
+        print("Sending cluster to " + str(host) + ":" + str(port))
         s.connect((host, port))
-
+    
         f = open(filename,'rb')
         data = f.read(1024)
         while (data):
@@ -51,7 +52,7 @@ async def mock_send_frame(frame_cluster, host, port):
         s.close() 
     except Exception as e:
         print(e)
-    time.sleep(random.randint(1,3))
+    asyncio.sleep(random.randint(1,3))
 
 #TODO: Look into whether or not a sequential approach is ok or not for this.
 def distribute_frames(frame_cluster, ports_arr):
@@ -65,11 +66,8 @@ def distribute_frames(frame_cluster, ports_arr):
         # Choose a random avaliable worker to send the cluster to
         host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
         hostname = host_and_port[0]
-        port = host_and_port[1]
-        # Send the cluster
-        print("Sending cluster")
+        port = int(host_and_port[1])
         tasks.append(asyncio.ensure_future(mock_send_frame(cluster, hostname, port)))
-        port = port + 1
     loop.run_until_complete(asyncio.wait(tasks))  
     loop.close()
 
@@ -84,7 +82,11 @@ if __name__ == '__main__':
     parser.add_argument("--video_path", help="path of the video",type=str, required=True)
     parser.add_argument("--port_list", help="ports avaliable for workers",type=list, required=True)
     args = parser.parse_args()
-    ports= ("".join(args.port_list)[:-1]).split(",") # Produced in ./workerStartup.sh may need to refactor
+    ports = "".join(args.port_list)
+    if ports[len(ports)-1] == ",":
+        ports = ("".join(args.port_list)[:-1]).split(",") # Produced in ./workerStartup.sh may need to refactor
+    else:
+        ports = ports.split(",")
 
     # Get all frames of the video
     frames = video_utils.get_frames_from_video(args.video_path)

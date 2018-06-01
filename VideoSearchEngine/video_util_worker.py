@@ -12,6 +12,7 @@ count_lock = threading.Lock()
 count = 0
 
 def thread_main(conn):
+    # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     file_lock.acquire()
     filename = "host" + host + "port" + str(port) + "workerPickleFile.pkl"
     f = open(filename,'wb')
@@ -40,26 +41,26 @@ def thread_main(conn):
 
     #TODO: Implement what needs to happen with the unpickled_data
     count_lock.acquire()
-    video_utils.export_video_frames(unpickled_data, "../frames/bunny_clip/port" + str(port) + "thread" + str(count) + "worker/")
+    print(len(unpickled_data))
+    #video_utils.export_video_frames(unpickled_data, "../frames/bunny_clip/port" + str(port) + "thread" + str(count) + "worker/")
     count_lock.release()
 
 # host and port are set in workers.conf 
 if __name__ == '__main__':
     host = sys.argv[1].split(':')[0]
     port = int(sys.argv[1].split(':')[1])
+    print("Worker started, listening on :" + str(host) + ":" + str(port))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
-
-    # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     s.listen(5)
-
     while True:
         #establish connection with client
         conn, addr = s.accept()
-        print('Connected to :', addr[0], ':', addr[1])
         # Start new thread
         count_lock.acquire()
         count = count + 1
         count_lock.release()
         start_new_thread(thread_main, (conn,))
+    s.close()
+        
 
