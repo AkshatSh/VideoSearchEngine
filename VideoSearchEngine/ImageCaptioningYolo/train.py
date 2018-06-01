@@ -156,16 +156,16 @@ def main(args, bbox_model):
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:
                 torch.save(encoder.state_dict(), os.path.join(
-                    args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+                    args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
                 torch.save(decoder.state_dict(), os.path.join(
                     args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
                 torch.save(yolo_encoder.state_dict(), os.path.join(
-                    args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+                    args.model_path, 'yolo_encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
                 sample_test(epoch * total_step + i + 1, vocab, encoder, yolo_encoder, decoder)
                 
             
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-        test(encoder, yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
+        # test(encoder, yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
     
     # test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)

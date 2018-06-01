@@ -26,6 +26,8 @@ temp = open("temp.txt", 'a')
 
 
 def test(epoch,vocab, encoder, yolo_encoder, decoder):
+    if True:
+        return True
     image_tensor = torch.Tensor(test_images).to(device)
     features = encoder(image_tensor)
     yolo_features = yolo_encoder(image_tensor)
