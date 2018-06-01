@@ -38,7 +38,7 @@ class EncoderCNN(nn.Module):
         """Extract feature vectors from input images."""
         images =images.cpu().data.numpy()
         images = [prep_image(image, 224) for image in images]
-        images = torch.Tensor(images)
+        images = torch.stack(images)
         if torch.cuda.is_available():
             images = images.cuda()
         with torch.no_grad():
