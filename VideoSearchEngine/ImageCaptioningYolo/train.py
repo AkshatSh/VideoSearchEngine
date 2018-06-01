@@ -52,8 +52,8 @@ def test(encoder, decoder, data_loader, step_count, tensor_board_writer):
 def main(args, bbox_model):
     tensor_board_writer = Logger()
     # Create model directory
-    if not os.path.exists(args.model_path):
-        os.makedirs(args.model_path)
+    # if not os.path.exists(args.model_path):
+    #     os.makedirs(args.model_path)
     
     # Image preprocessing, normalization for the pretrained resnet
     transform = transforms.Compose([ 
@@ -136,29 +136,29 @@ def main(args, bbox_model):
             optimizer.step()
             
             # Print log info
-            if i % args.log_step == 0:
-                if i != 0:
-                    step_count = epoch * total_step + i + 1
-                    perplexity_log = np.exp(loss.item())
-                    loss_log = loss.item()
-                    print(step_count, perplexity_log, loss_log)
-                    tensor_board_writer.scalar_summary("loss", loss_log, step_count)
-                    tensor_board_writer.scalar_summary("perplexity", perplexity_log, step_count)
-                # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss_log)
-                # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "perplexity",perplexity_log)
-                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
+            # if False and i % args.log_step == 0:
+            #     if i != 0:
+            #         step_count = epoch * total_step + i + 1
+            #         perplexity_log = np.exp(loss.item())
+            #         loss_log = loss.item()
+            #         print(step_count, perplexity_log, loss_log)
+            #         tensor_board_writer.scalar_summary("loss", loss_log, step_count)
+            #         tensor_board_writer.scalar_summary("perplexity", perplexity_log, step_count)
+            #     # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss_log)
+            #     # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "perplexity",perplexity_log)
+            #     print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
+            #           .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
                       
                 
             # Save the model checkpoints
-            if (i+1) % args.save_step == 0:
-                torch.save(decoder.state_dict(), os.path.join(
-                    args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
-                torch.save(yolo_encoder.state_dict(), os.path.join(
-                    args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+            # if False and (i+1) % args.save_step == 0:
+            #     torch.save(decoder.state_dict(), os.path.join(
+            #         args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+            #     torch.save(yolo_encoder.state_dict(), os.path.join(
+            #         args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
             
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-        test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
+        # test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
     
     # test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
