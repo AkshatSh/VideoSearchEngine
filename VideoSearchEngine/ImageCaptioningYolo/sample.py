@@ -12,16 +12,17 @@ from .im_args import get_arg_parse
 import numpy as np
 from PIL import Image
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-test_images = load_image("data/pics/dog-cycle-car.png")
-temp = open("temp.txt", 'a')
-
 def load_image(image_path):
     image = Image.open(image_path)
     image = image.resize([256, 256], Image.LANCZOS)
     
     image = np.array([np.array(image)])
     return image
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+test_images = load_image("data/pics/dog-cycle-car.png")
+temp = open("temp.txt", 'a')
+
 
 
 def test(epoch,vocab, encoder, yolo_encoder, decoder):
