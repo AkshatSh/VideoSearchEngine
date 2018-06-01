@@ -21,6 +21,7 @@ def load_image(image_path):
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 test_images = load_image("data/pics/dog-cycle-car.png")
+test_images = torch.Tensor(test_images).to(device)
 temp = open("temp.txt", 'a')
 
 

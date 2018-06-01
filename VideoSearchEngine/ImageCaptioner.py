@@ -3,6 +3,7 @@ import ImageCaptioningYolo.train as image_train
 import ImageCaptioningYolo.im_args as im_args
 import ImageCaptioningYolo.sample as image_sample
 from ImageCaptioningYolo.build_vocab import Vocabulary
+import ObjectDetection.Yolo as Yolo
 
 
 # Main file for generating text for an image
@@ -23,7 +24,7 @@ Describe API supported here
 
 
 if __name__ == "__main__":
-    model = TinyYolo.TinyYoloNet()
+    model = Yolo.YoloNet()
     args = im_args.get_arg_parse()
     image_train.main(im_args.get_arg_parse(), model)
     # image_sample.execute("data/pics/dog-cycle-car.png", model, args)

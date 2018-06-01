@@ -52,6 +52,7 @@ def test(encoder, yolo_encoder, decoder, data_loader, step_count, tensor_board_w
     tensor_board_writer.scalar_summary("dev_perplexity", np.exp(float(loss_total) / loss_count), step_count)
 
 def main(args, bbox_model):
+    bbox_model = bbox_model.to(device)
     tensor_board_writer = Logger()
     # Create model directory
     if not os.path.exists(args.model_path):
