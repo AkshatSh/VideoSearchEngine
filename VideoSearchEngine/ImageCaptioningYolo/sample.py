@@ -21,14 +21,14 @@ def load_image(image_path):
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 test_images = load_image("data/pics/dog-cycle-car.png")
-test_images = torch.Tensor(test_images).to(device)
 temp = open("temp.txt", 'a')
 
 
 
 def test(epoch,vocab, encoder, yolo_encoder, decoder):
-    features = encoder(test_images)
-    yolo_features = yolo_encoder(test_images)
+    image_tensor = torch.Tensor(test_images).to(device)
+    features = encoder(image_tensor)
+    yolo_features = yolo_encoder(image_tensor)
     combined_features = yolo_features + features
     sampled_ids = decoder.sample(combined_features)
     sampled_ids = sampled_ids[0].cpu().numpy()
