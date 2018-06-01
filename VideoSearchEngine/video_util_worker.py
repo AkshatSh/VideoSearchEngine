@@ -5,6 +5,7 @@ import sys
 from _thread import start_new_thread
 import threading
 import time
+import os
 
 file_lock = threading.Lock()
 conn_lock = threading.Lock()
@@ -38,6 +39,13 @@ def thread_main(conn):
         unpickled_data = []
     f.close()
     file_lock.release()
+
+    # Clean up pickle file, comment out to retain pickle files
+    if os.path.isfile(filename):
+        try:
+            os.remove(filename)
+        except OSError as e:  # if failed, report it back to the user
+            print ("Error: %s - %s." % (e.filename, e.strerror))
 
     #TODO: Implement what needs to happen with the unpickled_data
     count_lock.acquire()

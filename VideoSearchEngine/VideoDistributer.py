@@ -5,6 +5,7 @@ import pickle
 import socket
 import time
 import random
+import os
 
 # Main file for taking a video, and separating it into multiple chunks
 # and distributing the work
@@ -42,7 +43,6 @@ async def send_frame(frame_cluster, host, port, count):
         # Send pickle file over the network to server.
         print("Sending cluster to " + str(host) + ":" + str(port))
         s.connect((host, port))
-    
         f = open(filename,'rb')
         data = f.read(1024)
         while (data):
@@ -50,6 +50,13 @@ async def send_frame(frame_cluster, host, port, count):
             data = f.read(1024)
         f.close()
         s.close() 
+
+        # Clean up pickle file, comment out to retain pickle files
+        if os.path.isfile(filename):
+            try:
+                os.remove(filename)
+            except OSError as e:  # if failed, report it back to the user
+                print ("Error: %s - %s." % (e.filename, e.strerror))
     except Exception as e:
         print(e)
     asyncio.sleep(random.randint(1,3))
