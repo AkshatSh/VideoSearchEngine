@@ -21,7 +21,7 @@ class EncoderCNN(nn.Module):
         
     def forward(self, images):
         """Extract feature vectors from input images."""
-        images = self.transforms(images.data.numpy())
+        images = self.transforms(images.cpu().numpy()).to(device)
         with torch.no_grad():
             features = self.resnet(images)
         features = features.reshape(features.size(0), -1)
