@@ -4,7 +4,10 @@ async-timeout==3.0.0
 attrs==18.1.0
 bleach==1.5.0
 chardet==3.0.4
+cloudpickle==0.5.3
 cycler==0.10.0
+dask==0.17.5
+decorator==4.3.0
 dnspython==1.15.0
 html5lib==0.9999999
 idna==2.6
@@ -17,6 +20,7 @@ matplotlib==2.2.2
 mccabe==0.6.1
 mongoengine==0.15.0
 multidict==4.3.1
+networkx==2.1
 numpy==1.14.3
 opencv-python==3.4.1.15
 pandas==0.23.0
@@ -27,8 +31,12 @@ pymongo==3.6.1
 pyparsing==2.2.0
 python-dateutil==2.7.3
 pytz==2018.4
+PyWavelets==0.5.2
+scikit-image==0.14.0
+scipy==1.1.0
 six==1.11.0
 tensorboard==1.8.0
+toolz==0.9.0
 torch==0.4.0
 torchvision==0.2.1
 tqdm==4.23.3
