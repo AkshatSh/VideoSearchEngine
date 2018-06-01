@@ -17,11 +17,13 @@ class EncoderCNN(nn.Module):
         self.resnet = nn.Sequential(*modules)
         self.linear = nn.Linear(resnet.fc.in_features, embed_size)
         self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
-        self.transforms = Transforms.ToTensor()
+        self.transforms = Compose([ToPILImage(), ToTensor()])
         
     def forward(self, images):
         """Extract feature vectors from input images."""
-        images = self.transforms(images.cpu().numpy()).to(device)
+        images = self.transforms(images.cpu().numpy())
+        if torch.cuda.is_available():
+            images = images.cuda()
         with torch.no_grad():
             features = self.resnet(images)
         features = features.reshape(features.size(0), -1)
