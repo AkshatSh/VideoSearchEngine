@@ -36,7 +36,7 @@ class EncoderCNN(nn.Module):
         
     def forward(self, images):
         """Extract feature vectors from input images."""
-        images = [prep(image, 224) for image in images]
+        images = [prep_image(image, 224) for image in images]
         images = torch.Tensor(images)
         if torch.cuda.is_available():
             images = images.cuda()
