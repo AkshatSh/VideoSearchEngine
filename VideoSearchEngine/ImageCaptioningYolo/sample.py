@@ -15,9 +15,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def load_image(image_path):
     image = Image.open(image_path)
-    image = image.resize([224, 224], Image.LANCZOS)
+    image = image.resize([256, 256], Image.LANCZOS)
     
-    image = np.array(image)
+    image = np.array([np.array(image)])
     return image
 
 def get_caption(image, bbox_model, args):
@@ -41,9 +41,10 @@ def get_caption(image, bbox_model, args):
         args.num_layers
     ).to(device)
 
-    yolo_encoder.load_state_dict(torch.load(args.encoder_path))
-    decoder.load_state_dict(torch.load(args.decoder_path))
+    yolo_encoder.load_state_dict(torch.load(args.encoder_path, map_location=lambda storage, loc: storage))
+    decoder.load_state_dict(torch.load(args.decoder_path, map_location=lambda storage, loc: storage))
     image_tensor = torch.Tensor(image).to(device)
+    print(image_tensor.shape)
 
     feature = yolo_encoder(image_tensor)
     sampled_ids = decoder.sample(feature)

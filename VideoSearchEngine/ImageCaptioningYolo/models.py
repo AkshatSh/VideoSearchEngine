@@ -175,19 +175,34 @@ class DecoderLayoutRNN(nn.Module):
         return outputs
     
     def sample(self, features, states=None):
-        sample_ids = []
-        inputs = features.unsqueeze(1)
+        sampled_ids = []
+        inputs = features#.unsqueeze(1)
+        for i in range(20):
+            hiddens, states = self.lstm(inputs, states)          # hiddens: (batch_size, 1, hidden_size)
+            outputs = self.linear(hiddens.squeeze(1))            # outputs:  (batch_size, vocab_size)
+            _, predicted = outputs.max(1)                        # predicted: (batch_size)
+            sampled_ids.append(predicted)
+            inputs = self.embedding(predicted)                       # inputs: (batch_size, embed_size)
+            inputs = inputs.unsqueeze(1)                         # inputs: (batch_size, 1, embed_size)
+        sampled_ids = torch.stack(sampled_ids, 1)                # sampled_ids: (batch_size, max_seq_length)
+        return sampled_ids
+        # sample_ids = []
+        # inputs = features.unsqueeze(1)
+        # print("HERE")
 
-        for _ in range(20):
-            hiddens, states = self.lstm(inputs, states)
-            outputs = self.linear(hiddens.squeeze(1))
-            predicted = outputs.max(1)[1]
-            sample_ids.append(predicted)
-            inputs = self.embedding(predicted)
-        
-        sample_ids = torch.cat(sample_ids, 1)
+        # print(inputs.shape)
 
-        return sample_ids.unsqueeze()
+        # print(features.shape)
+
+        # for _ in range(20):
+        #     hiddens, states = self.lstm(inputs, states)
+        #     outputs = self.linear(hiddens.squeeze(1))
+        #     predicted = outputs.max(1)[1]
+        #     sample_ids.append(predicted)
+        #     inputs = self.embedding(predicted)
+        # sampled_ids = torch.stack(sampled_ids, 1) 
+
+        # return sample_ids#.unsqueeze()
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, max_seq_length=20):
