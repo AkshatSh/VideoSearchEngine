@@ -56,7 +56,7 @@ def get_caption(image, bbox_model, args):
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
 
-    encoder = EncoderCNN(args.embed_size).eval() 
+    encoder = EncoderCNN(args.embed_size).eval().to(device)
     
     yolo_encoder = YoloEncoder(
         args.layout_embed_size, 
