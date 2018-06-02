@@ -1,6 +1,10 @@
 # ignore security
 VideoSearchEngine/database_settings.py
 
+temp/
+saved/
+VideoSearchEngine/TestImageCaptioning/
+
 # ignore data folder
 data/
 cfg/

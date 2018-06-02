@@ -51,6 +51,7 @@ def test(epoch,vocab, encoder, yolo_encoder, decoder):
 
 def get_caption(image, bbox_model, args):
     # Load vocabulary wrapper
+    bbox_model = bbox_model.to(device)
     print(image.shape)
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)

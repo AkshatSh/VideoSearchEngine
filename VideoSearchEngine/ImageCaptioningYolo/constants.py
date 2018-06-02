@@ -2,4 +2,4 @@
 import os
 
 
-LOG_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'image_captioning_res_yolo_logs/')
+LOG_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'final_image_captioning_res_yolo_logs/')
