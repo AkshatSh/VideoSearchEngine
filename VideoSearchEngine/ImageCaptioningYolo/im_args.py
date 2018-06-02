@@ -26,7 +26,8 @@ def get_arg_parse():
     parser.add_argument('--learning_rate', type=float, default=0.0001)
 
 
-    parser.add_argument('--encoder_path', type=str, default='saved/image_yolo/encoder-5-3000.ckpt')
-    parser.add_argument('--decoder_path', type=str, default='saved/image_yolo/decoder-5-3000.ckpt')
+    parser.add_argument('--encoder_path', type=str, default='saved/test/encoder-3-2000.ckpt')
+    parser.add_argument('--decoder_path', type=str, default='saved/test/decoder-3-2000.ckpt')
+    parser.add_argument('--yolo_encoder_path', type=str, default='saved/test/yolo_encoder-3-2000.ckpt')
     args = parser.parse_args()
     return args
