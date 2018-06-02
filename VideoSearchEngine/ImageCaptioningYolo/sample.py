@@ -6,7 +6,8 @@ from .build_vocab import Vocabulary
 from .models import (
     EncoderCNN,
     YoloEncoder,
-    DecoderLayoutRNN
+    DecoderLayoutRNN,
+    DecoderRNN
 )
 from .im_args import get_arg_parse
 import numpy as np
@@ -65,7 +66,7 @@ def get_caption(image, bbox_model, args):
         vocab
     ).to(device)
 
-    decoder = DecoderLayoutRNN(
+    decoder = DecoderRNN(
         args.embed_size,
         args.hidden_size,
         len(vocab),
@@ -79,7 +80,9 @@ def get_caption(image, bbox_model, args):
     print(image_tensor.shape)
 
     feature1 = encoder(image_tensor)
-    feature = yolo_encoder(image_tensor)
+    feature = yolo_encoder(image_tensor).squeeze()
+    c = feature1 + feature
+    print(c.shape)
     sampled_ids = decoder.sample(feature1 + feature)
     sampled_ids = sampled_ids[0].cpu().numpy()
 

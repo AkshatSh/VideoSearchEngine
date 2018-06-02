@@ -5,19 +5,14 @@ from torch.autograd import Variable
 import numpy as np
 import os
 import pickle
-from .sample import test as sample_test
-from .data_loader import get_loader 
 from .build_vocab import Vocabulary
+from .data_loader import get_loader 
 from .models import EncoderCNN, DecoderRNN, DecoderLayoutRNN, YoloEncoder
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
 from tqdm import (
     tqdm,
     trange
-)
-
-from .im_args import (
-    get_arg_parse
 )
 
 from .TensorLogger import (
@@ -52,7 +47,8 @@ def test(encoder, yolo_encoder, decoder, data_loader, step_count, tensor_board_w
     tensor_board_writer.scalar_summary("dev_perplexity", np.exp(float(loss_total) / loss_count), step_count)
 
 def main(args, bbox_model):
-    bbox_model = bbox_model.to(device)
+    # args.model_path = "temp/test/"
+    # bbox_model = bbox_model.to(device)
     tensor_board_writer = Logger()
     # Create model directory
     if not os.path.exists(args.model_path):
@@ -99,12 +95,17 @@ def main(args, bbox_model):
         vocab
     ).to(device)
 
-    decoder = DecoderLayoutRNN(
-        args.embed_size,
+    # decoder = DecoderLayoutRNN(
+    #     args.embed_size,
+    #     args.hidden_size,
+    #     len(vocab),
+    #     args.num_layers
+    # ).to(device)
+
+    decoder = DecoderRNN(args.embed_size,
         args.hidden_size,
         len(vocab),
-        args.num_layers
-    ).to(device)
+        args.num_layers).to(device)
     
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -129,7 +130,7 @@ def main(args, bbox_model):
             
             # Forward, backward and optimize
             features = encoder(images)
-            yolo_features = yolo_encoder(images)
+            yolo_features = yolo_encoder(images).squeeze()
             combined_features = yolo_features + features
             outputs = decoder(combined_features, captions, lengths)
             loss = criterion(outputs, targets)
@@ -144,7 +145,6 @@ def main(args, bbox_model):
                     step_count = epoch * total_step + i + 1
                     perplexity_log = np.exp(loss.item())
                     loss_log = loss.item()
-                    print(step_count, perplexity_log, loss_log)
                     tensor_board_writer.scalar_summary("loss", loss_log, step_count)
                     tensor_board_writer.scalar_summary("perplexity", perplexity_log, step_count)
                 # log_generic_to_tensorboard(tensor_board_writer, step_count, "train", "loss", loss_log)
@@ -169,3 +169,10 @@ def main(args, bbox_model):
         # test(encoder, yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
     
     # test(yolo_encoder, decoder, test_data_loader, (epoch) * total_step, tensor_board_writer)
+    torch.save(encoder.state_dict(), os.path.join(
+        args.model_path, 'encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+    torch.save(decoder.state_dict(), os.path.join(
+        args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+    torch.save(yolo_encoder.state_dict(), os.path.join(
+        args.model_path, 'yolo_encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
+    # sample_test(epoch * total_step + i + 1, vocab, encoder, yolo_encoder, decoder)

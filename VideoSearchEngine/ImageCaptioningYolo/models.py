@@ -32,7 +32,6 @@ class EncoderCNN(nn.Module):
         self.resnet = nn.Sequential(*modules)
         self.linear = nn.Linear(resnet.fc.in_features, embed_size)
         self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
-        self.transforms = Transforms.Compose([Transforms.ToPILImage(), Transforms.ToTensor()])
         
     def forward(self, images):
         """Extract feature vectors from input images."""
@@ -208,7 +207,19 @@ class DecoderLayoutRNN(nn.Module):
             inputs = self.embedding(predicted)                       # inputs: (batch_size, embed_size)
             inputs = inputs.unsqueeze(1)                         # inputs: (batch_size, 1, embed_size)
         sampled_ids = torch.stack(sampled_ids, 1)                # sampled_ids: (batch_size, max_seq_length)
+        print(sampled_ids.shape)
         return sampled_ids
+        # sampled_ids = []
+        # inputs = features#.unsqueeze(1)
+        # for i in range(20):
+        #     hiddens, states = self.lstm(inputs, states)          # hiddens: (batch_size, 1, hidden_size)
+        #     outputs = self.linear(hiddens.squeeze(1))            # outputs:  (batch_size, vocab_size)
+        #     _, predicted = outputs.max(1)                        # predicted: (batch_size)
+        #     sampled_ids.append(predicted)
+        #     inputs = self.embedding(predicted)                       # inputs: (batch_size, embed_size)
+        #     inputs = inputs.unsqueeze(1)                         # inputs: (batch_size, 1, embed_size)
+        # sampled_ids = torch.stack(sampled_ids, 1)                # sampled_ids: (batch_size, max_seq_length)
+        # return sampled_ids
         # sample_ids = []
         # inputs = features.unsqueeze(1)
         # print("HERE")
@@ -226,7 +237,6 @@ class DecoderLayoutRNN(nn.Module):
         # sampled_ids = torch.stack(sampled_ids, 1) 
 
         # return sample_ids#.unsqueeze()
-
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, max_seq_length=20):
         """Set the hyper-parameters and build the layers."""
@@ -239,7 +249,7 @@ class DecoderRNN(nn.Module):
     def forward(self, features, captions, lengths):
         """Decode image feature vectors and generates captions."""
         embeddings = self.embed(captions)
-        embeddings = torch.cat((features, embeddings), 1)
+        embeddings = torch.cat((features.unsqueeze(1), embeddings), 1)
         packed = pack_padded_sequence(embeddings, lengths, batch_first=True) 
         hiddens, _ = self.lstm(packed)
         outputs = self.linear(hiddens[0])
