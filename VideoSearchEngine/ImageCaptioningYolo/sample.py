@@ -50,8 +50,11 @@ def test(epoch,vocab, encoder, yolo_encoder, decoder):
 
 def get_caption(image, bbox_model, args):
     # Load vocabulary wrapper
+    print(image.shape)
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
+
+    encoder = EncoderCNN(args.embed_size).eval() 
     
     yolo_encoder = YoloEncoder(
         args.layout_embed_size, 
@@ -69,12 +72,15 @@ def get_caption(image, bbox_model, args):
         args.num_layers
     ).to(device)
 
-    yolo_encoder.load_state_dict(torch.load(args.encoder_path, map_location=lambda storage, loc: storage))
+    yolo_encoder.load_state_dict(torch.load(args.yolo_encoder_path, map_location=lambda storage, loc: storage))
     decoder.load_state_dict(torch.load(args.decoder_path, map_location=lambda storage, loc: storage))
+    encoder.load_state_dict((torch.load(args.encoder_path, map_location=lambda storage, loc: storage)))
     image_tensor = torch.Tensor(image).to(device)
+    print(image_tensor.shape)
 
+    feature1 = encoder(image_tensor)
     feature = yolo_encoder(image_tensor)
-    sampled_ids = decoder.sample(feature)
+    sampled_ids = decoder.sample(feature1 + feature)
     sampled_ids = sampled_ids[0].cpu().numpy()
 
     sampled_caption = []
