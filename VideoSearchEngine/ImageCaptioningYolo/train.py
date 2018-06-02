@@ -162,7 +162,7 @@ def main(args, bbox_model):
                     args.model_path, 'decoder-{}-{}.ckpt'.format(epoch+1, i+1)))
                 torch.save(yolo_encoder.state_dict(), os.path.join(
                     args.model_path, 'yolo_encoder-{}-{}.ckpt'.format(epoch+1, i+1)))
-                sample_test(epoch * total_step + i + 1, vocab, encoder, yolo_encoder, decoder)
+                # sample_test(epoch * total_step + i + 1, vocab, encoder, yolo_encoder, decoder)
                 
             
             if torch.cuda.is_available():
