@@ -49,7 +49,7 @@ def test(encoder, yolo_encoder, decoder, data_loader, step_count, tensor_board_w
 def main(args, bbox_model):
     # args.model_path = "temp/test/"
     # bbox_model = bbox_model.to(device)
-    tensor_board_writer = Logger()
+    tensor_board_writer = Logger(args.log_dir)
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
@@ -92,7 +92,8 @@ def main(args, bbox_model):
         bbox_model, 
         args.embed_size, 
         len(vocab), 
-        vocab
+        vocab,
+        args.num_layers
     ).to(device)
 
     # decoder = DecoderLayoutRNN(

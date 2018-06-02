@@ -11,9 +11,11 @@ except ImportError:
 
 class Logger(object):
     
-    def __init__(self):
+    def __init__(self, logdir=None):
         """Create a summary writer logging to log_dir."""
-        self.writer = tf.summary.FileWriter(LOG_DIR)
+        if logdir is None:
+            logdir = LOG_DIR
+        self.writer = tf.summary.FileWriter(logdir)
 
     def scalar_summary(self, tag, value, step):
         """Log a scalar variable."""

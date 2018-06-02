@@ -48,9 +48,8 @@ class EncoderCNN(nn.Module):
 
 
 class YoloEncoder(nn.Module):
-    def __init__(self, embed_size, hidden_size, bbox_model, bbox_encoding_size, vocab_size, vocab):
+    def __init__(self, embed_size, hidden_size, bbox_model, bbox_encoding_size, vocab_size, vocab, num_layers):
         super(YoloEncoder, self).__init__()
-        num_layers = 1
         self.bbox_model = bbox_model
 
         # create an embedding matrix for the labels
