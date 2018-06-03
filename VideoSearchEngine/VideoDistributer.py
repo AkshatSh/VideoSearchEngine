@@ -37,8 +37,8 @@ async def send_frame(frame_cluster, host, port, count):
         pickle.dump(frame_cluster, f)
         f.close()
 
-        # TODO: Pass in host and port should as parameters, depends on how many machines are avaliable.
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         # Create a socket object
+        # Create a socket object
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Send pickle file over the network to server.
         print("Sending cluster to " + str(host) + ":" + str(port))
@@ -61,7 +61,6 @@ async def send_frame(frame_cluster, host, port, count):
         print(e)
     asyncio.sleep(random.randint(1,3))
 
-#TODO: Look into whether or not a sequential approach is ok or not for this.
 def distribute_frames(frame_cluster, ports_arr):
     '''
     Given an array of frames break into subarrays and send each subarray
@@ -93,7 +92,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ports = "".join(args.port_list)
     if ports[len(ports)-1] == ",":
-        ports = ("".join(args.port_list)[:-1]).split(",") # Produced in ./workerStartup.sh may need to refactor
+        ports = ("".join(args.port_list)[:-1]).split(",")
     else:
         ports = ports.split(",")
 
