@@ -6,6 +6,13 @@ from _thread import start_new_thread
 import threading
 import time
 import os
+import ObjectDetection.TinyYolo as TinyYolo
+import ImageCaptioningYolo.train as image_train
+import ImageCaptioningYolo.im_args as im_args
+import ImageCaptioningYolo.sample as image_sample
+from ImageCaptioningYolo.build_vocab import Vocabulary
+import ObjectDetection.Yolo as Yolo
+from ImageCaptioner import ImageCaptioner
 
 file_lock = threading.Lock()
 conn_lock = threading.Lock()
@@ -53,10 +60,16 @@ def thread_main(conn):
     #video_utils.export_video_frames(unpickled_data, "../frames/bunny_clip/port" + str(port) + "thread" + str(count) + "worker/")
     count_lock.release()
 
+def load_necessary():
+    captioner = ImageCaptioner()
+    captioner.load_models()
+    return captioner
+
 # host and port are set in workers.conf 
 if __name__ == '__main__':
     host = ''                 # Symbolic name meaning all available interfaces 
     port = int(sys.argv[1].split(':')[1])
+    image_captioner = load_necessary()
     print("Worker started, listening on :" + str(host) + ":" + str(port))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
