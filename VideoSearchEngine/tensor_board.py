@@ -1,4 +1,4 @@
-from tensorboard import SummaryWriter
+from tensorboard.writer import SummaryWriter
 
 from constants import (
     LOG_DIR
@@ -11,6 +11,8 @@ def log_to_tensorboard(writer, step, prefix, loss, accuracy):
     """
     Log metrics to Tensorboard.
     """
-    writer.add_scalar("{}/loss".format(prefix), loss, step)
-    writer.add_scalar("{}/accuracy".format(prefix),
-                      accuracy, step)
+    log_generic_to_tensorboard(writer, step, prefix, "loss", loss)
+    log_generic_to_tensorboard(writer, step, prefix, "accuracy", accuracy)
+
+def log_generic_to_tensorboard(writer, step, prefix, metric, value):
+    writer.add_scalar("{}/{}".format(prefix, metric), value)

@@ -56,6 +56,15 @@ And if you want to deactivate the virtual environment
 $ deactivate
 ```
 
+## Training Captioning Network
+
+### Caption Network Set up
+
+```bash
+python VideoSearchEngine/ImageCaptioningNoYolo/resize.py --image_dir data/coco/train2014/ 
+python VideoSearchEngine/ImageCaptioningNoYolo/resize.py --image_dir data/coco/val2014/ --output_dir data/val_resized2014
+```
+
 ## Plan
 
 Our project will, broadly defined, be attempting video searching through video summarization. To do this we propose the following objectives and resulting action plan:
