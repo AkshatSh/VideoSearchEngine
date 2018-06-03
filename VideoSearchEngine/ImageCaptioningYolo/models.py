@@ -50,7 +50,7 @@ class EncoderCNN(nn.Module):
 class YoloEncoder(nn.Module):
     def __init__(self, embed_size, hidden_size, bbox_model, bbox_encoding_size, vocab_size, vocab, num_layers):
         super(YoloEncoder, self).__init__()
-        # self.bbox_model = bbox_model
+        self.bbox_model = bbox_model
 
         # create an embedding matrix for the labels
         self.label_embedding = nn.Embedding(vocab_size, bbox_encoding_size)

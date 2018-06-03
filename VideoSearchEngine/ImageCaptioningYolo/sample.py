@@ -76,17 +76,17 @@ def get_caption(image, bbox_model, args, other):
     ).to(device)
 
     yolo_encoder.load_state_dict(torch.load(args.yolo_encoder_path, map_location=lambda storage, loc: storage))
-    yolo_encoder.bbox_model = other
+    # yolo_encoder.bbox_model = other
     decoder.load_state_dict(torch.load(args.decoder_path, map_location=lambda storage, loc: storage))
     encoder.load_state_dict((torch.load(args.encoder_path, map_location=lambda storage, loc: storage)))
     image_tensor = torch.Tensor(image).to(device)
     print(image_tensor.shape)
 
     feature1 = encoder(image_tensor)
-    feature = yolo_encoder(bbox_model, image_tensor).squeeze()
+    feature = yolo_encoder(bbox_model, image_tensor).squeeze() 
     c = feature1 + feature
     print(c.shape)
-    sampled_ids = decoder.sample(feature1 + feature)
+    sampled_ids = decoder.sample(c)
     sampled_ids = sampled_ids[0].cpu().numpy()
 
     sampled_caption = []
