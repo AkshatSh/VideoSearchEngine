@@ -66,22 +66,22 @@ def main(args, bbox_model):
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
     
-    with open(args.test_vocab_path, 'rb') as f:
-        test_vocab = pickle.load(f)
+    # with open(args.test_vocab_path, 'rb') as f:
+    #     test_vocab = pickle.load(f)
     
     # Build data loader
     data_loader = get_loader(args.image_dir, args.caption_path, vocab, # bbox_model, 
                              transform, args.batch_size,
                              shuffle=True, num_workers=args.num_workers) 
     
-    test_data_loader = get_loader(
-        args.test_image_dir, 
-        args.test_caption_path, 
-        test_vocab, 
-        transform, 
-        args.batch_size, 
-        shuffle=True, 
-        num_workers=args.num_workers)
+    # test_data_loader = get_loader(
+    #     args.test_image_dir, 
+    #     args.test_caption_path, 
+    #     test_vocab, 
+    #     transform, 
+    #     args.batch_size, 
+    #     shuffle=True, 
+    #     num_workers=args.num_workers)
 
     # Build the models
     encoder = EncoderCNN(args.embed_size).to(device)
@@ -131,7 +131,7 @@ def main(args, bbox_model):
             
             # Forward, backward and optimize
             features = encoder(images)
-            yolo_features = yolo_encoder(images).squeeze()
+            yolo_features = yolo_encoder(bbox_model,images).squeeze()
             combined_features = yolo_features + features
             outputs = decoder(combined_features, captions, lengths)
             loss = criterion(outputs, targets)
