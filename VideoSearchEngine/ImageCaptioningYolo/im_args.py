@@ -2,8 +2,8 @@ import argparse
 
 def get_arg_parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_path', type=str, default='models/final_resnet_yolo_image_layer_2/' , help='path for saving trained models')
-    parser.add_argument('--log_dir', type=str, default='final_resnet_yolo_image_layer_2' , help='path for logging')
+    parser.add_argument('--model_path', type=str, default='models/big_yolo/' , help='path for saving trained models')
+    parser.add_argument('--log_dir', type=str, default='big_yolo_log' , help='path for logging')
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--vocab_path', type=str, default='data/vocab.pkl', help='path for vocabulary wrapper')
     parser.add_argument('--image_dir', type=str, default='data/resized2014', help='directory for resized images')
@@ -17,7 +17,7 @@ def get_arg_parse():
     # Model parameters
     parser.add_argument('--embed_size', type=int , default=256, help='dimension of word embedding vectors')
     parser.add_argument('--hidden_size', type=int , default=512, help='dimension of lstm hidden states')
-    parser.add_argument('--num_layers', type=int , default=2, help='number of layers in lstm')
+    parser.add_argument('--num_layers', type=int , default=1, help='number of layers in lstm')
     parser.add_argument('--layout_embed_size', type=int, default=256,
                         help='layout encoding size')
     
@@ -27,8 +27,11 @@ def get_arg_parse():
     parser.add_argument('--learning_rate', type=float, default=0.001)
 
 
-    parser.add_argument('--encoder_path', type=str, default='temp/test3/encoder-1-1000.ckpt')
-    parser.add_argument('--decoder_path', type=str, default='temp/test3/decoder-1-1000.ckpt')
-    parser.add_argument('--yolo_encoder_path', type=str, default='temp/test3/yolo_encoder-1-1000.ckpt')
+    # parser.add_argument('--encoder_path', type=str, default='saved/resnet_image_yolo/encoder-4-3000.ckpt')
+    # parser.add_argument('--decoder_path', type=str, default='saved/resnet_image_yolo/decoder-4-3000.ckpt')
+    # parser.add_argument('--yolo_encoder_path', type=str, default='saved/resnet_image_yolo/yolo_encoder-4-3000.ckpt')
+    parser.add_argument('--encoder_path', type=str, default='saved/resnet_image_yolo/encoder-5-1000.ckpt')
+    parser.add_argument('--decoder_path', type=str, default='saved/resnet_image_yolo/decoder-5-1000.ckpt')
+    parser.add_argument('--yolo_encoder_path', type=str, default='saved/resnet_image_yolo/yolo_encoder-5-1000.ckpt')
     args = parser.parse_args()
     return args

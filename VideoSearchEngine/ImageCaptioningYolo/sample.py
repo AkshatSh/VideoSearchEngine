@@ -49,7 +49,7 @@ def test(epoch,vocab, encoder, yolo_encoder, decoder):
     temp.write("\n")
     print(sentence)
 
-def get_caption(image, bbox_model, args):
+def get_caption(image, bbox_model, args, other):
     # Load vocabulary wrapper
     bbox_model = bbox_model.to(device)
     print(image.shape)
@@ -64,7 +64,8 @@ def get_caption(image, bbox_model, args):
         bbox_model, 
         args.embed_size, 
         len(vocab), 
-        vocab
+        vocab,
+        args.num_layers
     ).to(device)
 
     decoder = DecoderRNN(
@@ -75,13 +76,14 @@ def get_caption(image, bbox_model, args):
     ).to(device)
 
     yolo_encoder.load_state_dict(torch.load(args.yolo_encoder_path, map_location=lambda storage, loc: storage))
+    yolo_encoder.bbox_model = other
     decoder.load_state_dict(torch.load(args.decoder_path, map_location=lambda storage, loc: storage))
     encoder.load_state_dict((torch.load(args.encoder_path, map_location=lambda storage, loc: storage)))
     image_tensor = torch.Tensor(image).to(device)
     print(image_tensor.shape)
 
     feature1 = encoder(image_tensor)
-    feature = yolo_encoder(image_tensor).squeeze()
+    feature = yolo_encoder(bbox_model, image_tensor).squeeze()
     c = feature1 + feature
     print(c.shape)
     sampled_ids = decoder.sample(feature1 + feature)
@@ -98,6 +100,6 @@ def get_caption(image, bbox_model, args):
     print(sentence)
 
 
-def execute(image_path, bbox_model, args):
+def execute(image_path, bbox_model, args, other):
     image = load_image(image_path)
-    get_caption(image, bbox_model, args)
+    get_caption(image, bbox_model, args, other)

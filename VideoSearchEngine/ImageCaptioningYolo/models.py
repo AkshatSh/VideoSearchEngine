@@ -50,7 +50,7 @@ class EncoderCNN(nn.Module):
 class YoloEncoder(nn.Module):
     def __init__(self, embed_size, hidden_size, bbox_model, bbox_encoding_size, vocab_size, vocab, num_layers):
         super(YoloEncoder, self).__init__()
-        self.bbox_model = bbox_model
+        # self.bbox_model = bbox_model
 
         # create an embedding matrix for the labels
         self.label_embedding = nn.Embedding(vocab_size, bbox_encoding_size)
@@ -68,10 +68,10 @@ class YoloEncoder(nn.Module):
         self.bbox_encoder.weight.data.uniform_(-0.1, 0.1)
         self.bbox_encoder.bias.data.fill_(0)
     
-    def forward(self, image):
+    def forward(self, bbox_model, image):
         image = image.cpu().data.numpy()
         with torch.no_grad():
-            labels, bboxes, lengths = self.bbox_model.get_bbox(image)
+            labels, bboxes, lengths = bbox_model.get_bbox(image)
         labels_one_hot = [torch.Tensor([self.vocab(token) for token in labels_n]) for labels_n in labels]
 
         # sort labels_one_hot and sort bboxes
