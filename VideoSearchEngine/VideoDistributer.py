@@ -32,6 +32,7 @@ async def send_frame(frame_cluster, host, port, count):
     asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
+        frame_cluster.insert(0, count)
         filename = "id:" + str(count) + "|" + "host:" + str(host) + "|" + "port:" + str(port) + "|" + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
@@ -103,4 +104,5 @@ if __name__ == '__main__':
     frame_clusters = video_utils.group_semantic_frames(frames)
 
     # Distrbute each of the groups
+    print("Determined " + str(len(frame_clusters)) + " distinct frame clusters.")
     distribute_frames(frame_clusters, ports)
