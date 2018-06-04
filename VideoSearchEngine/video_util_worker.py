@@ -6,6 +6,8 @@ from _thread import start_new_thread
 import threading
 import time
 import os
+import numpy as np
+import tqdm
 import ObjectDetection.TinyYolo as TinyYolo
 import ImageCaptioningYolo.train as image_train
 import ImageCaptioningYolo.im_args as im_args
@@ -16,28 +18,18 @@ from ImageCaptioner import ImageCaptioner
 
 file_lock = threading.Lock()
 conn_lock = threading.Lock()
-count_lock = threading.Lock()
-count = 0
 
-def thread_main(conn):
+def thread_main(conn, captioner, count):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
-    file_lock.acquire()
-    filename = "id:" + str(count) + "|" + "host:" + host + "|" + "port:" + str(port) + "|" + "worker.pkl"
+    filename = "id:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "worker.pkl"
     f = open(filename,'wb')
-    file_lock.release()
-    conn_lock.acquire()
     data = conn.recv(1024)
     while data:
         f.write(data)
         data = conn.recv(1024)
-    conn.close()
-    conn_lock.release()
-    file_lock.acquire()
     f.close()
-    file_lock.release()
 
     # De-pickle file to reconstruct array of images, manipulate as needed.
-    file_lock.acquire()
     f = open(filename,'rb')
     try:
         unpickled_data = pickle.load(f)
@@ -45,7 +37,6 @@ def thread_main(conn):
         print(e)
         unpickled_data = []
     f.close()
-    file_lock.release()
 
     # Clean up pickle file, comment out to retain pickle files
     if os.path.isfile(filename):
@@ -55,10 +46,18 @@ def thread_main(conn):
             print ("Error: %s - %s." % (e.filename, e.strerror))
 
     #TODO: Implement what needs to happen with the unpickled_data
-    count_lock.acquire()
-    print(len(unpickled_data))
-    #video_utils.export_video_frames(unpickled_data, "../frames/bunny_clip/port" + str(port) + "thread" + str(count) + "worker/")
-    count_lock.release()
+    count = unpickled_data[0]
+    print(count)
+    unpickled_data = unpickled_data[1:]
+    #for frame in tqdm.tqdm(unpickled_data):
+      # frame = np.array([np.array(frame)])
+      # print(captioner.get_caption(frame))
+    #sep = '\n'
+    #conn.send(str.encode(str(count)+sep))
+    #conn.close()
+
+
+      
 
 def load_necessary():
     captioner = ImageCaptioner()
@@ -74,14 +73,13 @@ if __name__ == '__main__':
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
     s.listen(5)
+    count = 0
     while True:
         #establish connection with client
         conn, addr = s.accept()
         # Start new thread
-        count_lock.acquire()
+        start_new_thread(thread_main, (conn,image_captioner,count,))
         count = count + 1
-        count_lock.release()
-        start_new_thread(thread_main, (conn,))
     s.close()
         
 
