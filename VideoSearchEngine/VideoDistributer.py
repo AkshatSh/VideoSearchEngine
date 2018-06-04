@@ -81,7 +81,7 @@ def distribute_frames(frame_cluster, ports_arr):
 
 '''
 Example Usage:
-    python VideoDistributer.py --video_path ../clips/bunny_clip.mp4
+    python VideoDistributer.py --video_path ../clips/bunny_clip.mp4 --port_list hannes.cs.washington.edu:24448,hannes.cs.washington.edu:24449
 '''
 
 #TODO: Add arguments to: only extract every nth frame, change width/height of captured frames, etc.
