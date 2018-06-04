@@ -103,4 +103,4 @@ if __name__ == '__main__':
     frame_clusters = video_utils.group_semantic_frames(frames)
 
     # Distrbute each of the groups
-    distribute_frames(frame_clusters, ports)
+    # distribute_frames(frame_clusters, ports)
