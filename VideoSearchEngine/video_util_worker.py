@@ -52,9 +52,8 @@ def thread_main(conn, captioner, count):
     #for frame in tqdm.tqdm(unpickled_data):
       # frame = np.array([np.array(frame)])
       # print(captioner.get_caption(frame))
-    #sep = '\n'
-    #conn.send(str.encode(str(count)+sep))
-    #conn.close()
+    conn.send(b"Hello Youtube")
+    conn.close()
 
 
       
