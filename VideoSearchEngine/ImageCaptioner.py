@@ -26,18 +26,20 @@ def load_image(image_path):
 class ImageCaptioner(object):
 
     def __init__(self):
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         pass
     
     def load_models(self):
         print("Beginning loading of Image Captioner Network")
-        self.tiny_yolo = TinyYolo.TinyYoloNet()
-        self.yolo = Yolo.YoloNet()
+        device = self.device
+        self.tiny_yolo = TinyYolo.TinyYoloNet().to(device)
+        self.yolo = Yolo.YoloNet().to(device)
         args = im_args.get_arg_parse()
         bbox_model = self.tiny_yolo
         with open(args.vocab_path, 'rb') as f:
             self.vocab = pickle.load(f)
 
-        self.encoder = EncoderCNN(args.embed_size).eval()
+        self.encoder = EncoderCNN(args.embed_size).eval().to(device)
         
         self.yolo_encoder = YoloEncoder(
             args.layout_embed_size, 
@@ -47,14 +49,14 @@ class ImageCaptioner(object):
             len(self.vocab), 
             self.vocab,
             args.num_layers
-        )
+        ).to(device)
 
         self.decoder = DecoderRNN(
             args.embed_size,
             args.hidden_size,
             len(self.vocab),
             args.num_layers
-        )
+        ).to(device)
 
         self.yolo_encoder.load_state_dict(torch.load(args.yolo_encoder_path, map_location=lambda storage, loc: storage))
         # yolo_encoder.bbox_model = other
@@ -64,7 +66,7 @@ class ImageCaptioner(object):
         print("Loaded Image Captioner Network")
     
     def get_caption(self, image):
-        image_tensor = torch.Tensor(image)
+        image_tensor = torch.Tensor(image).to(self.device)
         feature1 = self.encoder(image_tensor)
         feature = self.yolo_encoder(self.tiny_yolo, image_tensor).squeeze() 
         c = feature1 + feature
