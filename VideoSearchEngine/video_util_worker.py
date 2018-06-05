@@ -5,6 +5,7 @@ import sys
 from _thread import start_new_thread
 import threading
 import time
+import torch
 import os
 import numpy as np
 import tqdm
@@ -16,59 +17,100 @@ from ImageCaptioningYolo.build_vocab import Vocabulary
 import ObjectDetection.Yolo as Yolo
 from ImageCaptioner import ImageCaptioner
 
-file_lock = threading.Lock()
-conn_lock = threading.Lock()
+cap_lock = threading.Lock()
 
-def thread_main(conn, captioner, count):
+def thread_main(conn, captioner, cluster_num, host, port):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
-    filename = "id:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "worker.pkl"
-    f = open(filename,'wb')
+    filename_recv = "recievecluster:" + str(cluster_num) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "worker.pkl"
+    f_recv = open(filename_recv,'wb')
     data = conn.recv(1024)
     while data:
-        f.write(data)
+        f_recv.write(data)
         data = conn.recv(1024)
-    f.close()
+    f_recv.close()
+    conn.close()
 
     # De-pickle file to reconstruct array of images, manipulate as needed.
-    f = open(filename,'rb')
+    f_recv = open(filename_recv,'rb')
     try:
-        unpickled_data = pickle.load(f)
+        unpickled_data = pickle.load(f_recv)
     except Exception as e:
         print(e)
         unpickled_data = []
-    f.close()
+    f_recv.close()
 
     # Clean up pickle file, comment out to retain pickle files
-    if os.path.isfile(filename):
+    if os.path.isfile(filename_recv):
         try:
-            os.remove(filename)
+            os.remove(filename_recv)
         except OSError as e:  # if failed, report it back to the user
             print ("Error: %s - %s." % (e.filename, e.strerror))
 
     #TODO: Implement what needs to happen with the unpickled_data
-    count = unpickled_data[0]
-    print(count)
+    unpickled_cluster_num = unpickled_data[0]
     unpickled_data = unpickled_data[1:]
-    #for frame in tqdm.tqdm(unpickled_data):
-      # frame = np.array([np.array(frame)])
-      # print(captioner.get_caption(frame))
-    conn.send(b"Hello Youtube")
-    conn.close()
+    summaries = []
+    for frame in tqdm.tqdm(unpickled_data):
+        frame = np.array([np.array(frame)])
+        #if frame is torch.cuda.FloatTensor:
+        #    frame = frame.cpu()
+        cap_lock.acquire()
+        caption = captioner.get_caption(frame)
+        cap_lock.release()
+        print(caption)
+        #summaries.append(1)
+       
+    # Pickle the array of summaries.
+    summaries.insert(0, unpickled_cluster_num)
+    filename_send = "sendcluster:" + str(unpickled_cluster_num) + "|" + "host:" + str(host) + "|" + "port:" + str(port) + "|" + "worker.pkl"
+    f_send = open(filename_send,'wb')
+    pickle.dump(summaries, f_send)
+    f_send.close()
 
+    # Create a socket object
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-      
+    # Send pickle file over the network to server.
+    print("Sending cluster " + str(unpickled_cluster_num) + " to collector: " + str(host) + ":" + str(port))
+    s.connect((host, port))
+    f_send = open(filename_send,'rb')
+    data = f_send.read(1024)
+    while (data):
+        s.send(data)
+        data = f_send.read(1024)
+    f_send.close()
+    s.close()
 
+    # Clean up pickle file, comment out to retain pickle files
+    if os.path.isfile(filename_send):
+        try:
+            os.remove(filename_send)
+        except OSError as e:  # if failed, report it back to the user
+            print ("Error: %s - %s." % (e.filename, e.strerror))
+    
 def load_necessary():
     captioner = ImageCaptioner()
     captioner.load_models()
     return captioner
 
-# host and port are set in workers.conf 
+'''
+Usage:
+python video_util_worker.py <localhost:port_to_listen_on> <host_to_send_to:port_to_send_to>
+python VideoSearchEngine/video_util_worker.py localhost:24448 lobster.cs.washington.edu:1234
+'''
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: python video_util_worker.py <localhost:port_to_listen_on> <host_to_send_to:port_to_send_to>")
+        exit()
+
     host = ''                 # Symbolic name meaning all available interfaces 
     port = int(sys.argv[1].split(':')[1])
+
+    collector_host = sys.argv[2].split(':')[0]
+    collector_port = int(sys.argv[2].split(':')[1])
+
     image_captioner = load_necessary()
-    print("Worker started, listening on :" + str(host) + ":" + str(port))
+    print("Worker started, listening on: " + socket.gethostname()  + ":" + str(port) + " sending to: " + collector_host + ":" + str(collector_port))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
     s.listen(5)
@@ -77,7 +119,7 @@ if __name__ == '__main__':
         #establish connection with client
         conn, addr = s.accept()
         # Start new thread
-        start_new_thread(thread_main, (conn,image_captioner,count,))
+        start_new_thread(thread_main, (conn, image_captioner, count, collector_host, collector_port,))
         count = count + 1
     s.close()
         

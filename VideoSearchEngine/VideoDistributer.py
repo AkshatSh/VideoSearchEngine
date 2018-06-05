@@ -24,7 +24,7 @@ def get_video_distributor():
 Describe API supported here
 '''
 
-async def send_frame(frame_cluster, host, port, count):
+async def send_frame(frame_cluster, host, port, cluster_num):
     '''
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array to a file so it can be sent over the network.
@@ -32,8 +32,8 @@ async def send_frame(frame_cluster, host, port, count):
     asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
-        frame_cluster.insert(0, count)
-        filename = "id:" + str(count) + "|" + "host:" + str(host) + "|" + "port:" + str(port) + "|" + "distributer.pkl"
+        frame_cluster.insert(0, cluster_num)
+        filename = "cluster:" + str(cluster_num) + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
         f.close()
@@ -42,7 +42,7 @@ async def send_frame(frame_cluster, host, port, count):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Send pickle file over the network to server.
-        print("Sending cluster to " + str(host) + ":" + str(port))
+        print("Sending cluster to worker: " + str(host) + ":" + str(port))
         s.connect((host, port))
         f = open(filename,'rb')
         data = f.read(1024)
@@ -69,14 +69,14 @@ def distribute_frames(frame_cluster, ports_arr):
     '''
     loop = asyncio.get_event_loop()
     tasks = [] 
-    count = 0
+    cluster_num = 0
     for cluster in frame_cluster:
         # Choose a random avaliable worker to send the cluster to
         host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
         hostname = host_and_port[0]
         port = int(host_and_port[1])
-        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, count)))
-        count = count + 1
+        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num)))
+        cluster_num = cluster_num + 1
     loop.run_until_complete(asyncio.wait(tasks))  
     loop.close()
 
