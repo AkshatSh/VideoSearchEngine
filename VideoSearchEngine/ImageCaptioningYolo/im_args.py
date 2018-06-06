@@ -33,5 +33,5 @@ def get_arg_parse():
     parser.add_argument('--encoder_path', type=str, default='saved/resnet_image_yolo/encoder-5-1000.ckpt')
     parser.add_argument('--decoder_path', type=str, default='saved/resnet_image_yolo/decoder-5-1000.ckpt')
     parser.add_argument('--yolo_encoder_path', type=str, default='saved/resnet_image_yolo/yolo_encoder-5-1000.ckpt')
-    args = parser.parse_args()
+    args = parser.parse_args([])
     return args

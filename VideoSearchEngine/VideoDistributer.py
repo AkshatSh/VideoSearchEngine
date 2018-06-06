@@ -24,7 +24,7 @@ def get_video_distributor():
 Describe API supported here
 '''
 
-async def send_frame(frame_cluster, host, port, count):
+async def send_frame(frame_cluster, host, port, cluster_num, filename, total_clusters):
     '''
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array to a file so it can be sent over the network.
@@ -32,7 +32,10 @@ async def send_frame(frame_cluster, host, port, count):
     asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
-        filename = "id:" + str(count) + "|" + "host:" + str(host) + "|" + "port:" + str(port) + "|" + "distributer.pkl"
+        frame_cluster.insert(0, {"file_name": filename, "cluster_num": cluster_num, "total_clusters": total_clusters})
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        filename = "/tmp/VideoSearchEngine/cluster:" + str(cluster_num) + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
         f.close()
@@ -41,7 +44,7 @@ async def send_frame(frame_cluster, host, port, count):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Send pickle file over the network to server.
-        print("Sending cluster to " + str(host) + ":" + str(port))
+        print("Sending cluster to worker: " + str(host) + ":" + str(port))
         s.connect((host, port))
         f = open(filename,'rb')
         data = f.read(1024)
@@ -61,27 +64,26 @@ async def send_frame(frame_cluster, host, port, count):
         print(e)
     asyncio.sleep(random.randint(1,3))
 
-def distribute_frames(frame_cluster, ports_arr):
+async def distribute_frames(frame_cluster, ports_arr, filename):
     '''
     Given an array of frames break into subarrays and send each subarray
     to some server for processing.
     '''
-    loop = asyncio.get_event_loop()
+    # loop = asyncio.get_event_loop()
     tasks = [] 
-    count = 0
+    cluster_num = 0
     for cluster in frame_cluster:
         # Choose a random avaliable worker to send the cluster to
-        host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
+        host_and_port = ports_arr[cluster_num % len(ports_arr)].split(":")
         hostname = host_and_port[0]
         port = int(host_and_port[1])
-        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, count)))
-        count = count + 1
-    loop.run_until_complete(asyncio.wait(tasks))  
-    loop.close()
+        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num, filename, len(frame_cluster))))
+        cluster_num = cluster_num + 1
+    await asyncio.wait(tasks)
 
 '''
 Example Usage:
-    python VideoDistributer.py --video_path ../clips/bunny_clip.mp4
+    python VideoDistributer.py --video_path ../clips/bunny_clip.mp4 --port_list hannes.cs.washington.edu:24448,hannes.cs.washington.edu:24449
 '''
 
 #TODO: Add arguments to: only extract every nth frame, change width/height of captured frames, etc.
@@ -97,10 +99,13 @@ if __name__ == '__main__':
         ports = ports.split(",")
 
     # Get all frames of the video
-    frames = video_utils.get_frames_from_video(args.video_path)
+    frame_clusters = video_utils.get_frames_clusters_from_video(args.video_path)
 
     # Seperate frames into groups of similiar frames
-    frame_clusters = video_utils.group_semantic_frames(frames)
+    #frame_clusters = video_utils.group_semantic_frames(frames)
 
     # Distrbute each of the groups
-    distribute_frames(frame_clusters, ports)
+    print("Determined " + str(len(frame_clusters)) + " distinct frame clusters.")
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(distribute_frames(frame_clusters, ports, args.video_path))
+    loop.close()
