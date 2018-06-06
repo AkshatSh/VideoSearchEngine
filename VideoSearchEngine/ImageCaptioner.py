@@ -73,14 +73,14 @@ class ImageCaptioner(object):
         sampled_ids = self.decoder.sample(c)
         sampled_ids = sampled_ids[0].cpu().numpy()
 
-        sampled_ids = sampled_ids[1:len(sampled_ids) - 1]
-
         sampled_caption = []
         for word_id in sampled_ids:
             word = self.vocab.idx2word[word_id]
-            sampled_caption.append(word)
+            if word == '<start>':
+                continue
             if word == '<end>':
                 break
+            sampled_caption.append(word)
         sentence = ' '.join(sampled_caption)
 
         return sentence
