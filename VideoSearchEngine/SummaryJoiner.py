@@ -7,7 +7,7 @@ from nltk.corpus import brown, stopwords
 from nltk.cluster.util import cosine_distance
 import numpy as np
 from operator import itemgetter 
-from IPython import embed
+# from IPython import embed
 
 def pagerank(A, eps=0.0001, d=0.85):
     P = np.ones(len(A)) / len(A)
@@ -73,13 +73,17 @@ def textrank(sentences, top_n=5, stopwords=None):
     sentence_ranks = pagerank(S)
  
     # Sort the sentence ranks
-    ranked_sentence_indexes = [item[0] for item in sorted(enumerate(sentence_ranks), key=lambda item: -item[1])]
+    filtered_sentence_ranks = filter(lambda item: item[0] > 0.01, sentence_ranks)
+    print(sentence_ranks)
+    print(filtered_sentence_ranks)
+    ranked_sentence_indexes = [item[0] for item in sorted(enumerate(filtered_sentence_ranks), key=lambda item: -item[1])]
     selected_sentences = sorted(ranked_sentence_indexes[:top_n])
     summary = itemgetter(*selected_sentences)(sentences)
     return summary
  
-sentences = []
-with open('example_summary.txt', 'r') as f:
-    sentences = [line.strip() for line in f]
-for idx, sentence in enumerate(textrank(sentences, top_n=3, stopwords=stopwords.words('english'))):
-    print("%s. %s" % ((idx + 1), ' '.join(sentence)))
+if __name__ == "__main__":
+    sentences = []
+    with open('example_summary.txt', 'r') as f:
+        sentences = [line.strip() for line in f]
+    for idx, sentence in enumerate(textrank(sentences, top_n=3, stopwords=stopwords.words('english'))):
+        print("%s. %s" % ((idx + 1), ' '.join(sentence)))

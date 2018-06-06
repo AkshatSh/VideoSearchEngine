@@ -16,15 +16,23 @@ from ImageCaptioningYolo.build_vocab import Vocabulary
 import ObjectDetection.Yolo as Yolo
 from ImageCaptioner import ImageCaptioner
 import database_utils
+import SummaryJoiner
+from nltk.corpus import brown, stopwords
 
 map_lock = threading.Lock()
 video_summary = {}
 
-def finished(filename, summary):
+def finished(filename, summary, total_num):
     print("Finished", filename)
-    summary_str = summary.join('.')
-    print(summary_str)
-    # database_utils.upload_new_summary(os.path.basename(filename), summary_str, filename)
+    summary_list = []
+    for i in range(total_num):
+        for summ in summary[i]:
+            summary_list.append(summ)
+    token_strings = summary_list # [s.split(" ") for s in summary_list]
+    res = SummaryJoiner.textrank(token_strings, top_n=5, stopwords=stopwords.words('english'))
+    print(res)
+    database_utils.upload_new_summary(os.path.basename(filename), '\n'.join(res), filename)
+    print("done uploading", filename)
 
 
 def thread_main(conn, count):
@@ -72,9 +80,9 @@ def thread_main(conn, count):
     if cluster_num in video_summary[cluster_filename]:
         print("WTFFFFFFFFFFFFF")
     video_summary[cluster_filename][cluster_num] = unpickled_data
-
-    if len(video_summary[cluster_filename][cluster_num]) == total_num:
-        finished(cluster_filename, video_summary[cluster_filename])
+    print(len(video_summary[cluster_filename]), total_num)
+    if len(video_summary[cluster_filename]) == total_num:
+        finished(cluster_filename, video_summary[cluster_filename], total_num)
         del video_summary[cluster_filename]
     map_lock.release()
 

@@ -76,9 +76,11 @@ class ImageCaptioner(object):
         sampled_caption = []
         for word_id in sampled_ids:
             word = self.vocab.idx2word[word_id]
-            sampled_caption.append(word)
+            if word == '<start>':
+                continue
             if word == '<end>':
                 break
+            sampled_caption.append(word)
         sentence = ' '.join(sampled_caption)
 
         return sentence
