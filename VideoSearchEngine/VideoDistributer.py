@@ -33,7 +33,9 @@ async def send_frame(frame_cluster, host, port, cluster_num, filename, total_clu
     try:
         # Pickle the array of frames.
         frame_cluster.insert(0, {"file_name": filename, "cluster_num": cluster_num, "total_clusters": total_clusters})
-        filename = "cluster:" + str(cluster_num) + "distributer.pkl"
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        filename = "/tmp/VideoSearchEngine/cluster:" + str(cluster_num) + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
         f.close()
@@ -97,7 +99,7 @@ if __name__ == '__main__':
         ports = ports.split(",")
 
     # Get all frames of the video
-    frame_clusters = video_utils.get_frames_clusters_from_video(args.video_path, 50)
+    frame_clusters = video_utils.get_frames_clusters_from_video(args.video_path, 60)
 
     # Seperate frames into groups of similiar frames
     #frame_clusters = video_utils.group_semantic_frames(frames)

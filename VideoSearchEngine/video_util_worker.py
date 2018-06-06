@@ -22,7 +22,9 @@ import random
 
 def thread_main(conn, captioner, count, host, port):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
-    filename_recv = "recievecluster:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "worker.pkl"
+    filename_recv = "/tmp/VideoSearchEngine/recievecluster:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "worker.pkl"
+    if not os.path.exists(os.path.dirname(filename_recv)):
+        os.makedirs(os.path.dirname(filename_recv))
     f_recv = open(filename_recv,'wb')
     print("Writing file {}".format(filename_recv))
     data = conn.recv(1024)
@@ -34,7 +36,6 @@ def thread_main(conn, captioner, count, host, port):
 
 
     # De-pickle file to reconstruct array of images, manipulate as needed.
-
     f_recv = open(filename_recv,'rb')
     try:
         unpickled_data = pickle.load(f_recv)
@@ -71,7 +72,7 @@ def thread_main(conn, captioner, count, host, port):
     summaries.insert(0, {"file_name": unpickled_cluster_filename, "cluster_num": unpickled_cluster_num, "total_clusters": total_clusters})
     # summaries.insert(0, unpickled_cluster_filename)
     # summaries.insert(1, unpickled_cluster_num)
-    filename_send = "sendcluster:" + str(count) + "|" + "host:" + str(host) + "|" + "worker.pkl"
+    filename_send = "/tmp/VideoSearchEngine/sendcluster:" + str(count) + "|" + "host:" + str(host) + "|" + "worker.pkl"
     print("Writing file {}".format(filename_send))
     f_send = open(filename_send,'wb')
     pickle.dump(summaries, f_send)
