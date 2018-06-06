@@ -73,10 +73,10 @@ def textrank(sentences, top_n=5, stopwords=None):
     sentence_ranks = pagerank(S)
  
     # Sort the sentence ranks
-    filtered_sentence_ranks = filter(lambda item: item[0] > 0.01, sentence_ranks)
-    print(sentence_ranks)
-    print(filtered_sentence_ranks)
-    ranked_sentence_indexes = [item[0] for item in sorted(enumerate(filtered_sentence_ranks), key=lambda item: -item[1])]
+    #filtered_sentence_ranks = filter(lambda item: item[0] > 0.01, sentence_ranks)
+    #print(sentence_ranks)
+    #print(filtered_sentence_ranks)
+    ranked_sentence_indexes = [item[0] for item in sorted(enumerate(sentence_ranks), key=lambda item: -item[1])]
     selected_sentences = sorted(ranked_sentence_indexes[:top_n])
     summary = itemgetter(*selected_sentences)(sentences)
     return summary
