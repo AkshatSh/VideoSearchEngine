@@ -21,6 +21,7 @@ map_lock = threading.Lock()
 video_summary = {}
 
 def finished(filename, summary):
+    print("Finished", filename)
     summary_str = summary.join('.')
     print(summary_str)
     # database_utils.upload_new_summary(os.path.basename(filename), summary_str, filename)
@@ -69,11 +70,10 @@ def thread_main(conn, count):
         print("WTFFFFFFFFFFFFF")
     video_summary[cluster_filename][cluster_num] = unpickled_data
 
-    if cluster_num == total_num:
+    if len(video_summary[cluster_filename][cluster_num]) == total_num:
         finished(cluster_filename, video_summary[cluster_filename])
         del video_summary[cluster_filename]
     map_lock.release()
-    print(video_summary)
 
 '''
 Usage:
