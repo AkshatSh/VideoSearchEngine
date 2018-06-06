@@ -56,7 +56,7 @@ def thread_main(conn, count):
     metadata = unpickled_data[0]
     cluster_filename = metadata["file_name"]
     cluster_num = metadata["cluster_num"]
-    total_num = metadata["total_num"]
+    total_num = metadata["total_clusters"]
     # cluster_filename = unpickled_data[0]
     # cluster_num = unpickled_data[1]
     unpickled_data = unpickled_data[1:]

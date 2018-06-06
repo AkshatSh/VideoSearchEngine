@@ -54,7 +54,7 @@ def thread_main(conn, captioner, count, host, port):
     metadata = unpickled_data[0]
     unpickled_cluster_filename = metadata["file_name"]  # unpickled_data[0]
     unpickled_cluster_num = metadata["cluster_num"]  # unpickled_data[1]
-    total_clusters = metadata["total_cluster"]
+    total_clusters = metadata["total_clusters"]
     unpickled_data = unpickled_data[1:]
     summaries = []
     frame_clusters = video_utils.group_semantic_frames(unpickled_data)
