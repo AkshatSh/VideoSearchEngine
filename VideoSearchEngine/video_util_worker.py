@@ -49,9 +49,11 @@ def thread_main(conn, captioner, count, host, port):
             print ("Error: %s - %s." % (e.filename, e.strerror))
 
     #TODO: Implement what needs to happen with the unpickled_data
-    unpickled_cluster_filename = unpickled_data[0]
-    unpickled_cluster_num = unpickled_data[1]
-    unpickled_data = unpickled_data[2:]
+    metadata = unpickled_data[0]
+    unpickled_cluster_filename = metadata["file_name"]  # unpickled_data[0]
+    unpickled_cluster_num = metadata["cluster_num"]  # unpickled_data[1]
+    total_clusters = metadata["total_cluster"]
+    unpickled_data = unpickled_data[1:]
     summaries = []
     for frame in tqdm.tqdm(unpickled_data):
         frame = np.array([np.array(frame)])
@@ -61,8 +63,9 @@ def thread_main(conn, captioner, count, host, port):
         summaries.append(caption)
        
     # Pickle the array of summaries.
-    summaries.insert(0, unpickled_cluster_filename)
-    summaries.insert(1, unpickled_cluster_num)
+    summaries.insert(0, {"file_name": unpickled_cluster_filename, "cluster_num": unpickled_cluster_num, "total_clusters": total_clusters})
+    # summaries.insert(0, unpickled_cluster_filename)
+    # summaries.insert(1, unpickled_cluster_num)
     filename_send = "sendcluster:" + str(count) + "|" + "host:" + str(host) + "|" + "worker.pkl"
     print("Writing file {}".format(filename_send))
     f_send = open(filename_send,'wb')
