@@ -33,8 +33,6 @@ async def send_frame(frame_cluster, host, port, cluster_num, filename, total_clu
     try:
         # Pickle the array of frames.
         frame_cluster.insert(0, {"file_name": filename, "cluster_num": cluster_num, "total_clusters": total_clusters})
-        # frame_cluster.insert(0, filename)
-        # frame_cluster.insert(1, cluster_num)
         filename = "cluster:" + str(cluster_num) + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
