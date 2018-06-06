@@ -11,13 +11,14 @@ from torch.autograd import Variable
 This util file is for anything related to video processing that can be factored out into here
 '''
 
-def get_frames_from_video(video_path):
+def get_frames_clusters_from_video(video_path, cluster_size=1000):
     '''
-    Given a video path, read the video, store all the frames in the array
+    Given a video path, read the video, store every cluster_size frames in an array add it a list
     and return it.
     '''
     # Playing video from file:
-    frameArray = []
+    frameClustersArray = []
+    cluster = []
     cap = cv2.VideoCapture(video_path)
 
     while(True):
@@ -27,13 +28,22 @@ def get_frames_from_video(video_path):
         if frame is None or ret is False:
             break
         # Add frame to array
-        frameArray.append(frame)
+        cluster.append(frame)
+        # If cluster is cluster size break it off
+        if len(cluster) == cluster_size:
+            frameClustersArray.append(list(cluster))
+            cluster.clear()
+
+    # Append any residual frames
+    if len(cluster) > 0:
+        frameClustersArray.append(list(cluster))
+        cluster.clear()  
 
     # When everything done, release the capture
     cap.release()
     cv2.destroyAllWindows()
 
-    return frameArray
+    return frameClustersArray
 
 def export_video_frames(frames, output_path):
     '''
