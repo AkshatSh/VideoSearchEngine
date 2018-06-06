@@ -1,0 +1,26 @@
+<doctype html>
+<head>
+    <title>Video Search Engine</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static',filename='style.css') }}">
+</head>
+    
+<h2 id="title">"What's that Video Again?": Video Search Engine</h2>
+<p></p>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% from "_formhelpers.html" import render_field %}
+<form class="searchBar" method=post>
+  <dl>
+    {{ render_field(form.search) }}
+  </dl>
+  <p><input id="homeSubmit" type=submit value=Search>
+</form>
