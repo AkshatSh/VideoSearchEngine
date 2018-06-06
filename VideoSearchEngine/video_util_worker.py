@@ -17,20 +17,22 @@ from ImageCaptioningYolo.build_vocab import Vocabulary
 import ObjectDetection.Yolo as Yolo
 from ImageCaptioner import ImageCaptioner
 
-cap_lock = threading.Lock()
 
-def thread_main(conn, captioner, cluster_num, host, port):
+def thread_main(conn, captioner, count, host, port):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
-    filename_recv = "recievecluster:" + str(cluster_num) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "worker.pkl"
+    filename_recv = "recievecluster:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "worker.pkl"
     f_recv = open(filename_recv,'wb')
+    print("Writing file {}".format(filename_recv))
     data = conn.recv(1024)
     while data:
         f_recv.write(data)
         data = conn.recv(1024)
-    f_recv.close()
     conn.close()
+    f_recv.close()
+
 
     # De-pickle file to reconstruct array of images, manipulate as needed.
+
     f_recv = open(filename_recv,'rb')
     try:
         unpickled_data = pickle.load(f_recv)
@@ -47,22 +49,22 @@ def thread_main(conn, captioner, cluster_num, host, port):
             print ("Error: %s - %s." % (e.filename, e.strerror))
 
     #TODO: Implement what needs to happen with the unpickled_data
-    unpickled_cluster_num = unpickled_data[0]
-    unpickled_data = unpickled_data[1:]
+    unpickled_cluster_filename = unpickled_data[0]
+    unpickled_cluster_num = unpickled_data[1]
+    unpickled_data = unpickled_data[2:]
     summaries = []
     for frame in tqdm.tqdm(unpickled_data):
         frame = np.array([np.array(frame)])
-        #if frame is torch.cuda.FloatTensor:
-        #    frame = frame.cpu()
-        cap_lock.acquire()
+        if frame is torch.cuda.FloatTensor:
+            frame = frame.cpu()
         caption = captioner.get_caption(frame)
-        cap_lock.release()
-        print(caption)
-        #summaries.append(1)
+        summaries.append(caption)
        
     # Pickle the array of summaries.
-    summaries.insert(0, unpickled_cluster_num)
-    filename_send = "sendcluster:" + str(unpickled_cluster_num) + "|" + "host:" + str(host) + "|" + "port:" + str(port) + "|" + "worker.pkl"
+    summaries.insert(0, unpickled_cluster_filename)
+    summaries.insert(1, unpickled_cluster_num)
+    filename_send = "sendcluster:" + str(count) + "|" + "host:" + str(host) + "|" + "worker.pkl"
+    print("Writing file {}".format(filename_send))
     f_send = open(filename_send,'wb')
     pickle.dump(summaries, f_send)
     f_send.close()

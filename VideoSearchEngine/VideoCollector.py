@@ -16,6 +16,9 @@ from ImageCaptioningYolo.build_vocab import Vocabulary
 import ObjectDetection.Yolo as Yolo
 from ImageCaptioner import ImageCaptioner
 
+map_lock = threading.Lock()
+video_summary = {}
+
 def thread_main(conn, count):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     filename = "count:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "collector.pkl"
@@ -43,9 +46,19 @@ def thread_main(conn, count):
         except OSError as e:  # if failed, report it back to the user
             print ("Error: %s - %s." % (e.filename, e.strerror))
     
-    #cluster_num = unpickled_data[0]
-    #unpickled_data = unpickled_data[1:]
-    print(len(unpickled_data))
+    cluster_filename = unpickled_data[0]
+    cluster_num = unpickled_data[1]
+    unpickled_data = unpickled_data[2:]
+    map_lock.acquire()
+
+    if cluster_filename not in video_summary:
+        video_summary[cluster_filename] = {}
+    
+    if cluster_num in video_summary[cluster_filename]:
+        print("WTFFFFFFFFFFFFF")
+    video_summary[cluster_filename][cluster_num] = unpickled_data
+    map_lock.release()
+    print(video_summary)
 
 '''
 Usage:

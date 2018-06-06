@@ -24,7 +24,7 @@ def get_video_distributor():
 Describe API supported here
 '''
 
-async def send_frame(frame_cluster, host, port, cluster_num):
+async def send_frame(frame_cluster, host, port, cluster_num, filename):
     '''
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array to a file so it can be sent over the network.
@@ -32,7 +32,8 @@ async def send_frame(frame_cluster, host, port, cluster_num):
     asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
-        frame_cluster.insert(0, cluster_num)
+        frame_cluster.insert(0, filename)
+        frame_cluster.insert(1, cluster_num)
         filename = "cluster:" + str(cluster_num) + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
@@ -62,12 +63,12 @@ async def send_frame(frame_cluster, host, port, cluster_num):
         print(e)
     asyncio.sleep(random.randint(1,3))
 
-def distribute_frames(frame_cluster, ports_arr):
+async def distribute_frames(frame_cluster, ports_arr, filename):
     '''
     Given an array of frames break into subarrays and send each subarray
     to some server for processing.
     '''
-    loop = asyncio.get_event_loop()
+    # loop = asyncio.get_event_loop()
     tasks = [] 
     cluster_num = 0
     for cluster in frame_cluster:
@@ -75,10 +76,9 @@ def distribute_frames(frame_cluster, ports_arr):
         host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
         hostname = host_and_port[0]
         port = int(host_and_port[1])
-        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num)))
+        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num, filename)))
         cluster_num = cluster_num + 1
-    loop.run_until_complete(asyncio.wait(tasks))  
-    loop.close()
+    await asyncio.wait(tasks)
 
 '''
 Example Usage:
@@ -105,4 +105,6 @@ if __name__ == '__main__':
 
     # Distrbute each of the groups
     print("Determined " + str(len(frame_clusters)) + " distinct frame clusters.")
-    distribute_frames(frame_clusters, ports)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(distribute_frames(frame_clusters, ports, args.video_path))
+    loop.close()

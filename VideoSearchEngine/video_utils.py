@@ -74,7 +74,7 @@ def group_semantic_frames(frames, threshold=None):
             # compute structural similarity index between current image and oldest image in the frame group
             s = 0.0
             if torch.cuda.is_available():
-                threshold = .45
+                threshold = .28
                 img1 = torch.from_numpy(np.rollaxis(group[0], 2)).float().unsqueeze(0)/255.0
                 img2 = torch.from_numpy(np.rollaxis(frame, 2)).float().unsqueeze(0)/255.0
                 img1 = img1.cuda()
@@ -91,5 +91,7 @@ def group_semantic_frames(frames, threshold=None):
                 group.clear()
             # TODO: If we don't append the frame each time we only get the salient images which reduces number of frames
             group.append(frame)
-    print(len(frame_clusters))
+    
+    if len(group) > 0:
+        frame_clusters.append(list(group))
     return frame_clusters
