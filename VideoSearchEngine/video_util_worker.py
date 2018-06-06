@@ -23,6 +23,8 @@ import random
 def thread_main(conn, captioner, count, host, port):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     filename_recv = "/tmp/VideoSearchEngine/recievecluster:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "worker.pkl"
+    if not os.path.exists(os.path.dirname(filename)):
+        os.makedirs(os.path.dirname(filename))
     f_recv = open(filename_recv,'wb')
     print("Writing file {}".format(filename_recv))
     data = conn.recv(1024)
@@ -34,7 +36,6 @@ def thread_main(conn, captioner, count, host, port):
 
 
     # De-pickle file to reconstruct array of images, manipulate as needed.
-
     f_recv = open(filename_recv,'rb')
     try:
         unpickled_data = pickle.load(f_recv)

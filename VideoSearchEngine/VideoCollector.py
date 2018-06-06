@@ -30,6 +30,8 @@ def finished(filename, summary):
 def thread_main(conn, count):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     filename = "/tmp/VideoSearchEngine/count:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "collector.pkl"
+    if not os.path.exists(os.path.dirname(filename)):
+        os.makedirs(os.path.dirname(filename))
     f = open(filename,'wb')
     data = conn.recv(1024)
     while data:
