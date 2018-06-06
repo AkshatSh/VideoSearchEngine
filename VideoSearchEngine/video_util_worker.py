@@ -16,6 +16,8 @@ import ImageCaptioningYolo.sample as image_sample
 from ImageCaptioningYolo.build_vocab import Vocabulary
 import ObjectDetection.Yolo as Yolo
 from ImageCaptioner import ImageCaptioner
+import video_utils
+import random
 
 
 def thread_main(conn, captioner, count, host, port):
@@ -55,12 +57,15 @@ def thread_main(conn, captioner, count, host, port):
     total_clusters = metadata["total_cluster"]
     unpickled_data = unpickled_data[1:]
     summaries = []
-    for frame in tqdm.tqdm(unpickled_data):
-        frame = np.array([np.array(frame)])
-        if frame is torch.cuda.FloatTensor:
-            frame = frame.cpu()
-        caption = captioner.get_caption(frame)
-        summaries.append(caption)
+    frame_clusters = video_utils.group_semantic_frames(unpickled_data)
+    for frame_cluster in tqdm.tqdm(frame_clusters):
+        frames = random.choices(frame_cluster, k=10)
+        for frame in frames:
+            frame = np.array([np.array(frame)])
+            if frame is torch.cuda.FloatTensor:
+                frame = frame.cpu()
+            caption = captioner.get_caption(frame)
+            summaries.append(caption)
        
     # Pickle the array of summaries.
     summaries.insert(0, {"file_name": unpickled_cluster_filename, "cluster_num": unpickled_cluster_num, "total_clusters": total_clusters})
