@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, flash
 from forms import VideoSearchForm, AddVideoForm
 from tables import Results
 from page_rank import rank_pages
-from database_utils import upload_new_summary, get_all_data, get_url, get_id_from_name
+from database_utils import upload_new_summary, get_all_data, get_url, get_id_from_name, get_summary
 
 app = Flask(__name__)
 
@@ -25,7 +25,7 @@ def search_results(search):
 
     for video in scores:
         vid_id = str(get_id_from_name(video))
-        results.append({'name': video, 'url': get_url(vid_id)})
+        results.append({'name': video, 'summary':get_summary(vid_id), 'url': get_url(vid_id)})
   
     table = Results(results, html_attrs={'class':'results_table'})
     table.border = True

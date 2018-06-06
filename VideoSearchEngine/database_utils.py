@@ -92,3 +92,7 @@ def update_summary(
     )
 
     return result
+
+def remove_summary(name):
+    entry_id = get_id_from_name(name)
+    collection.delete_one({"name" : "test"})
