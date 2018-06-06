@@ -23,8 +23,8 @@ import random
 def thread_main(conn, captioner, count, host, port):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
     filename_recv = "/tmp/VideoSearchEngine/recievecluster:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "worker.pkl"
-    if not os.path.exists(os.path.dirname(filename)):
-        os.makedirs(os.path.dirname(filename))
+    if not os.path.exists(os.path.dirname(filename_recv)):
+        os.makedirs(os.path.dirname(filename_recv))
     f_recv = open(filename_recv,'wb')
     print("Writing file {}".format(filename_recv))
     data = conn.recv(1024)
