@@ -24,7 +24,11 @@ def get_video_distributor():
 Describe API supported here
 '''
 
+<<<<<<< HEAD
 async def send_frame(frame_cluster, host, port, cluster_num, filename):
+=======
+async def send_frame(frame_cluster, host, port, cluster_num, filename, total_clusters):
+>>>>>>> d0ffb8283ca3e0e9514d960e2b9107557323b1d8
     '''
     Given an array of frames send it to an listening server for further processing. Use pickle
     to serialize the array to a file so it can be sent over the network.
@@ -32,8 +36,14 @@ async def send_frame(frame_cluster, host, port, cluster_num, filename):
     asyncio.sleep(random.randint(1,3))
     try:
         # Pickle the array of frames.
+<<<<<<< HEAD
         frame_cluster.insert(0, filename)
         frame_cluster.insert(1, cluster_num)
+=======
+        frame_cluster.insert(0, {"file_name": filename, "cluster_num": cluster_num, "total_clusters": total_clusters})
+        # frame_cluster.insert(0, filename)
+        # frame_cluster.insert(1, cluster_num)
+>>>>>>> d0ffb8283ca3e0e9514d960e2b9107557323b1d8
         filename = "cluster:" + str(cluster_num) + "distributer.pkl"
         f = open(filename,'wb')
         pickle.dump(frame_cluster, f)
@@ -76,7 +86,11 @@ async def distribute_frames(frame_cluster, ports_arr, filename):
         host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
         hostname = host_and_port[0]
         port = int(host_and_port[1])
+<<<<<<< HEAD
         tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num, filename)))
+=======
+        tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num, filename, len(frame_cluster))))
+>>>>>>> d0ffb8283ca3e0e9514d960e2b9107557323b1d8
         cluster_num = cluster_num + 1
     await asyncio.wait(tasks)
 

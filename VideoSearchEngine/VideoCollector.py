@@ -15,9 +15,16 @@ import ImageCaptioningYolo.sample as image_sample
 from ImageCaptioningYolo.build_vocab import Vocabulary
 import ObjectDetection.Yolo as Yolo
 from ImageCaptioner import ImageCaptioner
+import database_utils
 
 map_lock = threading.Lock()
 video_summary = {}
+
+def finished(filename, summary):
+    summary_str = summary.join('.')
+    print(summary_str)
+    # database_utils.upload_new_summary(os.path.basename(filename), summary_str, filename)
+
 
 def thread_main(conn, count):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
@@ -46,9 +53,13 @@ def thread_main(conn, count):
         except OSError as e:  # if failed, report it back to the user
             print ("Error: %s - %s." % (e.filename, e.strerror))
     
-    cluster_filename = unpickled_data[0]
-    cluster_num = unpickled_data[1]
-    unpickled_data = unpickled_data[2:]
+    metadata = unpickled_data[0]
+    cluster_filename = metadata["file_name"]
+    cluster_num = metadata["cluster_num"]
+    total_num = metadata["total_num"]
+    # cluster_filename = unpickled_data[0]
+    # cluster_num = unpickled_data[1]
+    unpickled_data = unpickled_data[1:]
     map_lock.acquire()
 
     if cluster_filename not in video_summary:
@@ -57,6 +68,10 @@ def thread_main(conn, count):
     if cluster_num in video_summary[cluster_filename]:
         print("WTFFFFFFFFFFFFF")
     video_summary[cluster_filename][cluster_num] = unpickled_data
+
+    if cluster_num == total_num:
+        finished(cluster_filename, video_summary[cluster_filename])
+        del video_summary[cluster_filename]
     map_lock.release()
     print(video_summary)
 
@@ -82,6 +97,6 @@ if __name__ == '__main__':
         conn, addr = s.accept()
         # Start new thread
         start_new_thread(thread_main, (conn, count,))
-        count = count + 1;
+        count = count + 1
     s.close()
         
