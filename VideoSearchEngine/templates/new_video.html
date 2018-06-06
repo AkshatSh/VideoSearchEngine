@@ -1,0 +1,12 @@
+<doctype html>
+    <title>New Video - Video Search Engine</title>
+    <h2>New Video</h2>
+     
+    {% from "_formhelpers.html" import render_field %}
+    <form method=post>
+        <dl>
+            {{ render_field(form.name) }}
+            {{ render_field(form.url) }}
+        </dl>
+        <p><input type=submit value=Submit>
+    </form>

@@ -35,11 +35,14 @@ def get_entry(entry_id):
 def get_summary(entry_id):
     return get_entry(entry_id)['summary']
 
+def get_url(entry_id):
+    return get_entry(entry_id)['url']
+
 def get_video_name(entry_id):
     return get_entry(entry_id)['name']
 
 def get_id_from_name(name):
-    return collection.find({"name" : name})[0]
+    return collection.find({"name" : name})[0]['_id']
 
 def get_all_ids():
     return [str(entry['_id']) for entry in get_all_data()]

@@ -1,0 +1,48 @@
+body {
+    font-family: sans-serif;
+}
+
+form, dl, dd, dt {
+    display:inline
+}
+
+.result_submit {
+    display:inline
+}
+
+.table_col tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table_col {
+    font-size:36px;
+    height:64px;
+    border:none;
+}
+
+.results_table {
+    width: 75%;
+    border:none;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#resultSearch {
+    width:33%;
+}
+
+#search {
+    width:25%;
+    font-size:24px;
+}
+
+#homeSubmit {
+    height: 24px;
+    font-size:48px;
+}
+
+button {
+    font-size: 13px;
+}
+
+
