@@ -97,10 +97,10 @@ if __name__ == '__main__':
         ports = ports.split(",")
 
     # Get all frames of the video
-    frames = video_utils.get_frames_from_video(args.video_path)
+    frame_clusters = video_utils.get_frames_clusters_from_video(args.video_path, 50)
 
     # Seperate frames into groups of similiar frames
-    frame_clusters = video_utils.group_semantic_frames(frames)
+    #frame_clusters = video_utils.group_semantic_frames(frames)
 
     # Distrbute each of the groups
     print("Determined " + str(len(frame_clusters)) + " distinct frame clusters.")
