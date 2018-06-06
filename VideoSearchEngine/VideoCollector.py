@@ -29,7 +29,7 @@ def finished(filename, summary):
 
 def thread_main(conn, count):
     # Accept the pickle file sent by VideoDistributer.py and write/cache to local copy.
-    filename = "count:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "collector.pkl"
+    filename = "/tmp/VideoSearchEngine/count:" + str(count) + "|" + "host:" + socket.gethostname() + "|" + "port:" + str(port) + "|" + "collector.pkl"
     f = open(filename,'wb')
     data = conn.recv(1024)
     while data:
@@ -61,6 +61,7 @@ def thread_main(conn, count):
     # cluster_filename = unpickled_data[0]
     # cluster_num = unpickled_data[1]
     unpickled_data = unpickled_data[1:]
+    print(cluster_num, "finished")
     map_lock.acquire()
 
     if cluster_filename not in video_summary:
