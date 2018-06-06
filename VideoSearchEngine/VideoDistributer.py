@@ -74,7 +74,7 @@ async def distribute_frames(frame_cluster, ports_arr, filename):
     cluster_num = 0
     for cluster in frame_cluster:
         # Choose a random avaliable worker to send the cluster to
-        host_and_port = ports_arr[random.randint(0,len(ports_arr)-1)].split(":")
+        host_and_port = ports_arr[cluster_num % len(ports_arr)].split(":")
         hostname = host_and_port[0]
         port = int(host_and_port[1])
         tasks.append(asyncio.ensure_future(send_frame(cluster, hostname, port, cluster_num, filename, len(frame_cluster))))
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         ports = ports.split(",")
 
     # Get all frames of the video
-    frame_clusters = video_utils.get_frames_clusters_from_video(args.video_path, 60)
+    frame_clusters = video_utils.get_frames_clusters_from_video(args.video_path)
 
     # Seperate frames into groups of similiar frames
     #frame_clusters = video_utils.group_semantic_frames(frames)

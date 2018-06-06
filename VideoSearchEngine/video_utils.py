@@ -11,7 +11,7 @@ from torch.autograd import Variable
 This util file is for anything related to video processing that can be factored out into here
 '''
 
-def get_frames_clusters_from_video(video_path, cluster_size=1000):
+def get_frames_clusters_from_video(video_path, cluster_size=425):
     '''
     Given a video path, read the video, store every cluster_size frames in an array add it a list
     and return it.
