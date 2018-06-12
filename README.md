@@ -9,6 +9,8 @@ Authors:
 
 Semantically be able to search through a database of videos (using generated summaries)
 
+Take a look at our [poster](VideoSearchEnginePoster.pdf)
+
 ## System Overview
 
 The system described here is the overview of the overall system archietecture.
