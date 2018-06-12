@@ -84,7 +84,7 @@ The next section shows example output:
 
 Given a minute long video of traffic in Dhaka Bangladesh.
 
-```
+```python
 (
     'a man riding a bike down a street next to a large truck .',
     'a man riding a bike down a street next to a traffic light .',
