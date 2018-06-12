@@ -27,6 +27,40 @@ Below is the initial architecture of the video summarization network used to gen
 
 ![Video Summarization Network](figs/VideoSummarizationNetwork.png)
 
+We converted this into the following network for the final project
+
+![Final Network](figs/summarization.png)
+
+We can walk through the steps occuring with explantions here:
+
+1. We break apart frames into semantically different groups.
+
+    * Here we use `SSMI` (structured similarity measurment index) to determine if two frames are similar
+    * We define a threshold for comparison
+    * Any sequence of frames within that threshold belongs to a specific group.
+
+2. Random Sample from each group
+    * Since each group are all the semantically similar frames, to reduce the redundancies in the frame captions we try to remove similar frames by selecting a very small subset (1-5) frames from each group
+
+3. Feed each selected frame to an image captioning network to determine what happens in the frame
+    * This uses an Encoder-Decoder model for captioning the images as descibed in [Object2Text](https://arxiv.org/abs/1707.07102)
+    * Model description
+        * `Encoder`
+            * `EncoderCNN`
+                * Uses ResNet-152 pretrained to feed all the features to an encoded feature vector
+            * `YoloEncoder`
+                * From a frame performs bounding box object detection on the frame to determine the objects and the bounding boxes for all of them.
+                * Uses RNN structure (LSTM for this model) to encode the sequence of objects and their names
+                * Uses the resul to create another encoded feature vector
+        * `Decoder`
+            * Combines the two feature vectors from the `EncoderCNN` and the `YoloEncoder` to create a new feature vector, and uses that feature vector as input to start language generation for the frame caption
+    * Training
+        * **Dataset:** uses COCO for training
+        * **Bounding Box:** during train uses `TinyYOLO` for faster training time as well as allowing the network to use a less reliable network to train on, and the more reliable version during testing
+4. Uses `Extractive Summarization` to select unique phrases from all the frame captions seletected to create a reasonable description of what occured in the video.
+
+The next section shows example output:
+
 ## Example output
 
 Given a minute long video of traffic in Dhaka Bangladesh.
