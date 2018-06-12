@@ -11,6 +11,18 @@ Semantically be able to search through a database of videos (using generated sum
 
 Take a look at our [poster](VideoSearchEnginePoster.pdf)
 
+## Table of Contents
+
+* [System Overview](#system-overview)
+* [Video Summarization Overview](#video-summarization-overview)
+* [Example output](#example-output)
+* [User Interface](#user-interface)
+* [Set Up](#set-up)
+* [Training Captioning Network](#training-captioning-network)
+* [Plan](#plan)
+* [Data Sets](#data-sets-to-use)
+* [Citations](#citations)
+
 ## System Overview
 
 The video below shows exactly how the entire system works end to end.
@@ -81,6 +93,22 @@ Given a minute long video of traffic in Dhaka Bangladesh.
     'a city bus driving down a street next to a traffic light .'
 )
 ```
+
+## User Interface
+
+To use our search engine we built a `Flask` based application similar to google to search through our database.
+
+### Main UI
+
+This page features the main search functionality. A simplistic design similar to Google.
+
+![main](figs/ui-main.png)
+
+### Results UI
+
+This page features all the results for a given query. Every video in our database is returned in sorted order for relevance. We use `TF-IDF` scoring for a query to a rank for each of the summaries.
+
+![results](figs/ui-search.png)
 
 ## Set Up
 
