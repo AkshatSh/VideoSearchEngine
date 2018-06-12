@@ -17,6 +17,10 @@ The system described here is the overview of the overall system archietecture.
 
 ![System Overview](figs/SystemOverview.png)
 
+The video below shows exactly how the entire system works end to end.
+
+![Presentation](figs/presentation.gif)
+
 ## Video Summarization Overview
 
 Below is the initial architecture of the video summarization network used to generate video summaries.
