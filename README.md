@@ -32,7 +32,13 @@ Below is the initial architecture of the video summarization network used to gen
 Given a minute long video of traffic in Dhaka Bangladesh.
 
 ```
-('a man riding a bike down a street next to a large truck .', 'a man riding a bike down a street next to a traffic light .', 'a green truck with a lot of cars on it', 'a green truck with a lot of cars on the road .', 'a city bus driving down a street next to a traffic light .')
+(
+    'a man riding a bike down a street next to a large truck .', 
+    'a man riding a bike down a street next to a traffic light .', 
+    'a green truck with a lot of cars on it', 
+    'a green truck with a lot of cars on the road .',
+    'a city bus driving down a street next to a traffic light .'
+)
 ```
 
 ## Set Up
