@@ -13,15 +13,22 @@ Take a look at our [poster](VideoSearchEnginePoster.pdf)
 
 ## System Overview
 
-The system described here is the overview of the overall system archietecture.
-
-![System Overview](figs/SystemOverview.png)
-
 The video below shows exactly how the entire system works end to end.
 
 ![Presentation](figs/presentation.gif)
 
+The user facing system described here is the overview of the overall system architecture.
+
+![System Overview](figs/SystemOverview.png)
+
+The backend and video summarizing system was distributed in an attempt to tackle large videos. The architecture is described in the image below
+
+![Distribution](figs/distribution.png)
+
+
 ## Video Summarization Overview
+
+In this project, we attempted to solve video summarizatoin using image captioning. The architecture and motivation is explained in this section.
 
 Below is the initial architecture of the video summarization network used to generate video summaries.
 
@@ -178,7 +185,7 @@ The "MED Summaries" is a new dataset for evaluation of dynamic video summaries. 
 * [Tiny YOLO Implementation](https://github.com/marvis/pytorch-yolo2)
 * [machinebox -> video analysis/frame partitioning](https://github.com/machinebox/videoanalysis)
 * [Code to break video into frames](https://gist.github.com/keithweaver/70df4922fec74ea87405b83840b45d57)
-* [Po-Hsun-Su/pytorch-ssim] (https://github.com/Po-Hsun-Su/pytorch-ssim)
+* [Po-Hsun-Su/pytorch-ssim](https://github.com/Po-Hsun-Su/pytorch-ssim)
 
 ### Blogs and Other Websites
 
