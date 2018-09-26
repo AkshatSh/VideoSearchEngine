@@ -9,7 +9,7 @@ Authors:
 
 Semantically be able to search through a database of videos (using generated summaries)
 
-Take a look at our [poster](VideoSearchEnginePoster.pdf)
+Take a look at our [poster](VideoSearchEnginePoster.pdf)!
 
 ## Table of Contents
 
